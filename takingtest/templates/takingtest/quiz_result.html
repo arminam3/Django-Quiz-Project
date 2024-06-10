@@ -39,11 +39,14 @@
                         </h1>
                         <h4><i class="fa-solid fa-check text-primary"></i>&nbsp;سوال را به درستی پاسخ دادید</h4>
                         <p>
-                        <span>به</span>
-                        <span id="user_percent"> {{user_result_percent}} </span>
-                        <span>درصد از سولات پاسخ صحیح دادید</span>
+                            <span>به</span>
+                            <span id="user_percent"> {{user_result_percent}} </span>
+                            <span>درصد از سولات پاسخ صحیح دادید</span>
                         </p>
-						
+                        <span style="position: relative;bottom: 10px;">
+                        <button class="btn" style="font-size: larger;" id="red"><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
+                        <button class="btn" style="font-size: larger;" id="green" ><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
+						</span>
                     <!-- Column -->
                     <div class="col-xl-12" style="background-color: #f2e3e1;">
                         <div class="card">
@@ -57,15 +60,15 @@
                                 <div class="progress ">
                                     <div class="progress-bar progress-animated
                                     {% if score_avg >= 75 %}
-                                        bg-success
+                                    bg-success
                                     {% elif score_avg >= 50 %}
-                                        bg-warning
+                                    bg-warning
                                     {% else %}
-                                        bg-danger
+                                    bg-danger
                                     {% endif %}
                                     " style="width: {{score_avg}}%; height:6px;" role="progressbar">
-                                        <span class="sr-only"></span>
-                                    </div>
+                                    <span class="sr-only"></span>
+                                </div>
                                 </div>
                                 
                                 <!-- Column -->
@@ -126,5 +129,28 @@ const user_percent = document.getElementById("user_percent");
 animateValue(user_percent, 0, Number('{{user_result_percent}}'), 4000);
 
 </script>
+<script>
+    var btn1 = document.querySelector('#green');
+    var btn2 = document.querySelector('#red');
+
+    btn1.addEventListener('click', function() {
+        btn2.classList.remove('text-primary');
+        fetch(`{% url 'like_dislike' %}?quiz_result_id={{quiz_result.id}}&action=like`)
+                .then(response => response.json())
+                .then(data => {
+                    this.classList.toggle('text-success');
+                });
+    });
+    btn2.addEventListener('click', function() {
+        btn1.classList.remove('text-success');
+        fetch(`{% url 'like_dislike' %}?quiz_result_id={{quiz_result.id}}&action=dislike`)
+                .then(response => response.json())
+                .then(data => {
+                    this.classList.toggle('text-primary');
+                });
+    });
+</script>
+<script src="https://use.fontawesome.com/fe459689b4.js"></script>
+
 </body>
 </html>

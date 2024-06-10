@@ -9,5 +9,5 @@ def notificaiton(request):
 
 
     return {
-        "notificaitons": user_notification,
+        "notifications": user_notification,
     }

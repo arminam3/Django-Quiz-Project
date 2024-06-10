@@ -1,16 +1,20 @@
 import os
-from datetime import timedelta
+from datetime import timedelta ,datetime
 
 from typing import Any
 from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse,  JsonResponse
 from django.shortcuts import render, redirect,reverse
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
+from django.contrib import messages
+
+from accounts.mixins import IsStaffUserMixin, IsStaffOrQuizMakerUserMixin, CheckHavingProfileMixin
 
 from .models import Question, Quiz, Lesson
 from .forms import (
@@ -25,72 +29,111 @@ class QuestionListView(ListView):
     template_name = "exam/quiz/quiz_list.html"
 
 
+# class QuizDetailView(IsStaffOrQuizMakerUserMixin, DetailView):
+#     model = Quiz
+#     template_name = "exam/quiz/quiz_detail.html"
+#     context_object_name = "quiz"
 
-class QuizListView(ListView):
-    # model = Quiz
-    template_name = "exam/quiz/quiz_list.html"
-    context_object_name = "quiz_list"
+#     def distch(self, request, *args, **kwargs):
+#         if request.user == self.get_object().quiz_maker:
+#             return super().dispatch(request, *args, **kwargs)
+#         elif request.user.is_staff:
+#             return super().dispatch(request, *args, **kwargs)
+#         return HttpResponseForbidden('شما اجازه دسترسی به این صفحه را ندارید')
 
-    def get_queryset(self) -> QuerySet[Any]:
-        return Quiz.objects.filter(is_deleted=False)
 
-
-class QuizDetailView(DetailView):
+class QuizQuestionUpdateView(IsStaffOrQuizMakerUserMixin, DetailView):
     model = Quiz
     template_name = "exam/quiz/quiz_detail.html"
-    context_object_name = "quiz"
 
-
-class QuizQuestionUpdateView(LoginRequiredMixin, DetailView):
-    model = Quiz
-    template_name = "exam/quiz/quiz_detail.html"
+    def dispatch(self, request, *args, **kwargs):
+        if request.user == self.get_object().quiz_maker:
+            return super().dispatch(request, *args, **kwargs)
+        elif request.user.is_staff:
+            return super().dispatch(request, *args, **kwargs)
+        return HttpResponseForbidden('شما اجازه دسترسی به این صفحه را ندارید')
 
     # change new answers for every question  
     def post(self, request, *args, **kwargs):
         posted_data = self.request.POST
         quiz = get_object_or_404(Quiz, id=self.kwargs["pk"])
 
+        # delete question and remove it from quiz
         delete_question_id = posted_data.get('delete_question')
         if delete_question_id :
             question = Question.objects.get(pk=delete_question_id)
+            question.is_deleted = True
+            question.save()
             quiz.questions.remove(question)
+            messages.success(
+            self.request,
+            f"<strong>. سوال مورد نظر حذف شد</strong>"
+            )
             return redirect(reverse('quiz_question_update', args=[quiz.id]))
+        
         # for every question check new data and last-answer. if data was new then change it.
+        num = 0
         for question in quiz.questions.all():
             question_new_answer = posted_data.get(str(question.id))
-            if posted_data.get('last-answer') != question_new_answer:
+            if question.answer != question_new_answer:
                 question.answer = question_new_answer
                 question.save()
-        
+                num += 1
+        messages.success(
+        self.request,
+        f"<strong>پاسخ {num}سوال تغییر یافت . </strong>"
+        )
         return super().get(request, *args, **kwargs)
 
 
-class QuestionCreateView(LoginRequiredMixin,CreateView):
-    model = Question
-    template_name = "exam/question/question_create.html"
-    form_class = QuestionCreateForm
+# class QuestionCreateView(IsStaffOrQuizMakerUserMixin, CreateView):
+#     model = Question
+#     template_name = "exam/question/question_create.html"
+#     form_class = QuestionCreateForm
 
-    def post(self, request, *args, **kwargs):
-        posted_data = request.POST
-        posted_files = request.FILES
+#     def post(self, request, *args, **kwargs):
+#         posted_data = request.POST
+#         posted_files = request.FILES
 
-        question_create_form = QuestionCreateForm(posted_data, posted_files)
+#         question_create_form = QuestionCreateForm(posted_data, posted_files)
 
-        if question_create_form.is_valid() : 
-            created_obj = question_create_form.save()
-            created_obj.question_maker = request.user
-            created_obj.save()
-        return redirect(reverse('question_create'))
-    success_url = reverse_lazy('question_create')
+#         if question_create_form.is_valid() : 
+#             created_obj = question_create_form.save()
+#             created_obj.question_maker = request.user
+#             created_obj.save()
+#             messages.success(
+#             self.request,
+#             "<strong>سوال ایجاد شد .</strong>"
+#             )
+#         else:
+#             messages.error(
+#             self.request,
+#             "<strong>اطلاعات وارد شده برا ی ساخت سوال صحیح نمی باشد.</strong>"
+#             )
+#         return redirect(reverse('question_create'))
+#     success_url = reverse_lazy('question_create')
 
-
-class QuestionUpdateView(LoginRequiredMixin, UpdateView):
-    model = Question
+# update question values
+class QuestionUpdateView(IsStaffOrQuizMakerUserMixin, UpdateView):
     template_name = "exam/question/question_update.html"
     form_class = QuestionUpdateForm
     context_object_name = "question"
 
-    def get_form_kwargs(self) -> dict[str, Any]:
+    def get_queryset(self):
+        question = Question.objects.filter(id=self.kwargs.get('pk'), is_deleted=False)
+        return question
+
+    # check staff user and quiz_maker allow to access this view
+    def dispatch(self, request, *args, **kwargs):
+        posted_data = self.request.POST
+        question = get_object_or_404(Question, id=self.kwargs["pk"])
+        if request.user == question.question_maker:
+            return super().dispatch(request, *args, **kwargs)
+        elif request.user.is_staff:
+            return super().dispatch(request, *args, **kwargs)
+        return HttpResponseForbidden('شما اجازه دسترسی به این صفحه را ندارید')
+
+    def get_form_kwargs(self):
         obj = self.get_object()
         posted_data = self.request.POST
 
@@ -102,6 +145,7 @@ class QuestionUpdateView(LoginRequiredMixin, UpdateView):
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         obj = self.get_object()
         posted_data = self.request.POST
+        question = get_object_or_404(Question, id=self.kwargs["pk"])
 
         # delete image path and image file
         if obj.image is not None and  posted_data.get('delete_image') == 'on':
@@ -109,37 +153,45 @@ class QuestionUpdateView(LoginRequiredMixin, UpdateView):
                 os.remove(obj.image.path)
             obj.image = None
             obj.save()
+        
+        # delete question
+        if posted_data.get('button-name') == 'delete_question':
+            return redirect(reverse('question_delete', args=[question.id]))
         return super().post(request, *args, **kwargs)
     
     # success_url = reverse_lazy('home')
-    def get_success_url(self) -> str:
+    def get_success_url(self):
+        messages.success(
+        self.request,
+        "<strong>سوال مورد نظر شما با موفقیت تغییر یافت .</strong>"
+        )
         return reverse('question_update', args=[self.get_object().id])
     
 
-class QuestionDetailView(DetailView):
-    model = Question
-    template_name = "exam/question/question_detail.html"
-    context_object_name = "question"
+# class QuestionDetailView(DetailView):
+#     model = Question
+#     template_name = "exam/question/question_detail.html"
+#     context_object_name = "question"
 
-    def get_queryset(self) -> QuerySet[Any]:
-        return Question.objects.get_not_deleted(pk=self.pk_url_kwarg)
+#     def get_queryset(self) -> QuerySet[Any]:
+#         return Question.objects.get_not_deleted(pk=self.pk_url_kwarg)
 
-    # change new answers for  question  
-    def post(self, request, *args, **kwargs):
-        posted_data = self.request.POST
-        question = get_object_or_404(Question, id=self.kwargs["pk"])
-        print(posted_data.get('id'))
+#     # change new answers for  question  
+#     def post(self, request, *args, **kwargs):
+#         posted_data = self.request.POST
+#         question = get_object_or_404(Question, id=self.kwargs["pk"])
+#         print(posted_data.get('id'))
 
-        # for every question check new data and last-answer. if data was new then change it.
-        question_new_answer = posted_data.get(str(question.id))
-        if posted_data.get('last-answer') != question_new_answer:
-            question.answer = question_new_answer
-            question.save()
+#         # for every question check new data and last-answer. if data was new then change it.
+#         question_new_answer = posted_data.get(str(question.id))
+#         if posted_data.get('last-answer') != question_new_answer:
+#             question.answer = question_new_answer
+#             question.save()
 
-        if posted_data['button-name'] == 'delete_question':
-            return redirect(reverse('question_delete', args=[question.id]))
+#         if posted_data.get('button-name') == 'delete_question':
+#             return redirect(reverse('question_delete', args=[question.id]))
 
-        return super().get(request, *args, **kwargs)
+#         return super().get(request, *args, **kwargs)
     
 
 def question_delete_view(request, pk):
@@ -147,21 +199,24 @@ def question_delete_view(request, pk):
 
     question.is_deleted = True
     question.save()
+    question_quiz = Quiz.objects.filter(questions__id=question.id)
+    for quiz in question_quiz:
+        quiz.questions.remove(question)
 
     return redirect('home')
 
 
-class QuestionListView(ListView):
+# class QuestionListView(ListView):
     # model = Question
-    template_name = "exam/question/question_list.html"
-    context_object_name = "questions"
+    # template_name = "exam/question/question_list.html"
+    # context_object_name = "questions"
 
-    def get_queryset(self) -> QuerySet[Any]:
-        user = self.request.user
-        return Question.objects.filter(question_maker=user, is_deleted=False)
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     return Question.objects.filter(question_maker=user, is_deleted=False)
 
 
-class QuizCreateView(LoginRequiredMixin, CreateView):
+class QuizCreateView(IsStaffOrQuizMakerUserMixin, CreateView):
     model = Quiz
     template_name = "exam/quiz/quiz_create.html"
     fields = ('name', 'lesson', 'quiz_maker')
@@ -181,9 +236,7 @@ class QuizCreateView(LoginRequiredMixin, CreateView):
         return redirect(reverse('quiz_question_create', args=[obj.id]))
 
 
-    def form_valid(self, form: BaseModelForm) -> HttpResponse:
-
-
+    def form_valid(self, form: BaseModelForm):
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
@@ -191,7 +244,7 @@ class QuizCreateView(LoginRequiredMixin, CreateView):
         context['lessons'] = Lesson.objects.all()
         return context
     
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return reverse('quiz_question_create', args=[self.get_object().id])
 
 
@@ -201,14 +254,15 @@ class QuizQuestionCreateView(LoginRequiredMixin, CreateView):
     fields = ['text']
     
     def get_success_url(self) -> str:
-        return reverse('home')
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        return reverse('quiz_question_update',args=[self.kwargs['pk']])
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['quiz_pk'] = self.kwargs['pk']
         return context
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any):
         posted_data = request.POST
         posted_file = request.FILES
         user = request.user
@@ -246,9 +300,12 @@ class QuizQuestionCreateView(LoginRequiredMixin, CreateView):
             quiz.questions.add(new_question)
             
             num += 1
-
-        
-        return redirect(reverse('quiz_detail', args=[quiz.id]))
+            quiz_question_count = quiz.questions.count()
+            messages.success(
+            self.request,
+            f"<strong>  آزمون '{quiz.name}' با {quiz_question_count} .سوال در سیستم ثبت شد</strong>"
+            )
+        return redirect(reverse('quiz_question_update',args=[self.kwargs['pk']]))
     
 
 
@@ -279,11 +336,56 @@ def multi_question_maker(num=0):
     return context
 
 
-def quiz_delete(request):
-    if request.method == "POST":
-        posted_data = request.POST
+def quiz_delete(request, pk):
+    user = request.user
+    quiz = get_object_or_404(Quiz, pk=posted_data.get('quiz_id'))
 
-        quiz = get_object_or_404(Quiz, pk=posted_data.get('delete_quiz'))
-        quiz.is_deleted = True
-        quiz.save()
-    return redirect(reverse('quiz_list'))
+    if user.is_staff or (quiz.quiz_maker == user):
+        if request.method == "POST":
+            posted_data = request.POST
+            for question in quiz.questions.all():
+                question.is_deleted = True
+            quiz.is_deleted = True
+            quiz.save()
+        return JsonResponse({'message': 'question deleted.'}, status=200)
+    messages.error(
+        request,
+        f"<strong>شما اجازه حذف آزمون را ندارید.</strong>"
+    )
+    return JsonResponse({'message': 'not allowed!.'}, status=500)
+
+
+class QuizUpdateView(IsStaffOrQuizMakerUserMixin, UpdateView):
+    model = Quiz
+    fields = ('name', 'lesson', 'time')
+    template_name = 'exam/quiz/quiz_update.html'
+    context_object_name = 'quiz'
+
+    def dispatch(self, request, *args, **kwargs):
+        if (request.user == self.get_object().quiz_maker) or request.user.is_staff:
+            return super().dispatch(request, *args, **kwargs)
+        return HttpResponse('شما اجازه دسترسی به این صفحه را ندارید .')
+    
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        context = super().get_context_data(**kwargs)
+        lessons = Lesson.objects.filter(term=user.profile.term,discipline=user.profile.discipline)
+        context['lessons'] = lessons
+
+        quiz_time = int(self.get_object().time.total_seconds() // 60)
+        context['quiz_time'] = quiz_time
+        return context
+    
+    def form_valid(self, form: BaseModelForm):
+        quiz = self.get_object()
+        posted_data = self.request.POST
+        form.instance.time = timedelta(minutes=int(posted_data.get('time')))
+        if self.request.FILES.get('image'):
+                form.instance.image = self.request.FILES.get('image')
+        elif quiz.image:
+            form.instance.image = quiz.image
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+
+        return reverse('quiz_update', args=[self.get_object().id])

@@ -29,7 +29,9 @@
     ***********************************-->
     <div id="main-wrapper">
                     
-
+	{% block page_header_name %}
+		نتیجه آزمون
+	{% endblock page_header_name %}
     {% block content %}
         <!--**********************************
             Content body start
@@ -99,7 +101,15 @@
 										</div>
 										<div class="card-body">
 											<div class="basic-form">
-													<div class="row">
+												<div class="row">
+														{% if quiz_history.question.image %}
+														<div id="" class="" style="text-align: center;"> 
+															<a href="{{quiz_history.question.image.url}}" data-exthumbimage="images/big/img1.jpg" data-src="images/big/img1.jpg" class="col-lg-3 col-md-6 mb-4">
+																<img class="image-container-zoom-cus" src="{{quiz_history.question.image.url}}" alt="" style="max-height: 10em;margin-right:1.5em;border-radius: 1em;display: block; margin: 0 auto;"/>
+																<p style="font-size: 0.7em;margin-right:2.5em;white-space: nowrap;">با کلیک بر تصویر بزرگنمایی کنید.</p>
+															</a>
+														</div>
+														{% endif %}
 														<div class="col-xl-4 col-xxl-12 col-12">
 															<div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info " style="font-size: small;">
 																<!-- <div class="row"> -->
@@ -150,7 +160,7 @@
                                                                 btn-danger-rounded-cus
                                                                 {% endif %}
                                                                 {% endif %}
-                                                                " for="customRadioBox3" >{{quiz_history.question.choice_2}} </label>
+                                                                " for="customRadioBox3" >{{quiz_history.question.choice_3}} </label>
                                                             </div>
 														</div>
 														<div class="col-xl-4 col-xxl-12 col-12">

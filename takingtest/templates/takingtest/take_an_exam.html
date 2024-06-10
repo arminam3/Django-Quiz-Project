@@ -2,12 +2,18 @@
 {% load static %}
 {% load my_tags %}
 
-<!-- test form start -->
 
 {% block title %}
   <title>take an exam</title>
 {% endblock title %}
 
+{% block head %}
+	<link href="{% static './vendor/lightgallery/css/lightgallery.min.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block page_header_name %}
+    صفحه ی آزمون
+{% endblock page_header_name %}
 
 {% block content %}
 <div class="content-body farsi">
@@ -41,41 +47,47 @@
                                             {% if forloop.counter != 1 %}
                                                 <hr>
                                             {% endif %}
-                                            
-                                            
                                             {% csrf_token %}
                                             <div class="mb-1 row">
-                                                <label class="col-sm-11 col-form-label"  style="text-align: justify;">
-                                                    <h4 class="card-title col-12">
+                                                <label class="col-sm-11 col-form-label" id="text{{forloop.counter0}}"  style="text-align: justify;">
+                                                    <h4 class="card-title col-12" >
                                                         <span href="" class="badge  badge-primary">
                                                         {{forloop.counter|e2fnum}}
                                                         </span> 
                                                         {{question.text}}</h4>
                                                 </label>
                                             </div>
+                                            {% if question.image %}
+                                            <div id="" class="" style="text-align: center;"> 
+                                                <a href="{{question.image.url}}" data-exthumbimage="images/big/img1.jpg" data-src="images/big/img1.jpg" class="col-lg-3 col-md-6 mb-4">
+                                                    <img class="image-container-zoom-cus" src="{{question.image.url}}" alt="" style="max-height: 10em;margin-right:1.5em;border-radius: 1em;display: block; margin: 0 auto;"/>
+                                                    <p style="font-size: 0.7em;margin-right:2.5em;white-space: nowrap;">با کلیک بر تصویر بزرگنمایی کنید.</p>
+                                                </a>
+                                            </div>
+                                            {% endif %}
                                             <div class="row">
                                                 <div class="col-xl-4 col-xxl-12 col-12">
                                                     <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
-                                                        <input  type="radio" class="form-check-input form-check-input-cus" id="customRadioBox3" name="{{question.id}}" value="1" required>
-                                                        <label class="form-check-label form-check-label-cus " for="customRadioBox3" >{{question.choice_1}}</label>
+                                                        <input  type="radio" class="form-check-input form-check-input-cus"  id="{{question.id}}-1" name="{{question.id}}" value="1" required>
+                                                        <label class="form-check-label form-check-label-cus " for="{{question.id}}-1"  onclick="scrollToNext('text{{forloop.counter}}')">{{question.choice_1}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-4 col-xxl-12 col-12">
                                                     <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
-                                                        <input  type="radio" class="form-check-input form-check-input-cus" id="customRadioBox3" name="{{question.id}}" value="2" required>
-                                                        <label class="form-check-label form-check-label-cus " for="customRadioBox3" >{{question.choice_2}}</label>
+                                                        <input  type="radio" class="form-check-input form-check-input-cus" id="{{question.id}}-2" name="{{question.id}}" value="2" required>
+                                                        <label class="form-check-label form-check-label-cus " for="{{question.id}}-2" onclick="scrollToNext('text{{forloop.counter}}')" >{{question.choice_2}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-4 col-xxl-12 col-12">
                                                     <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
-                                                        <input  type="radio" class="form-check-input form-check-input-cus" id="customRadioBox3" name="{{question.id}}" value="3" required>
-                                                        <label class="form-check-label form-check-label-cus " for="customRadioBox3" >{{question.choice_3}}</label>
+                                                        <input  type="radio" class="form-check-input form-check-input-cus" id="{{question.id}}-3" name="{{question.id}}" value="3" required>
+                                                        <label class="form-check-label form-check-label-cus " for="{{question.id}}-3" onclick="scrollToNext('text{{forloop.counter}}')" >{{question.choice_3}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-4 col-xxl-12 col-12">
                                                     <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
-                                                        <input  type="radio" class="form-check-input form-check-input-cus" id="customRadioBox3" name="{{question.id}}" value="4" required>
-                                                        <label class="form-check-label form-check-label-cus " for="customRadioBox3" >{{question.choice_4}}</label>
+                                                        <input  type="radio" class="form-check-input form-check-input-cus" id="{{question.id}}-4" name="{{question.id}}" value="4" required>
+                                                        <label class="form-check-label form-check-label-cus " for="{{question.id}}-4" onclick="scrollToNext('text{{forloop.counter}}')" >{{question.choice_4}}</label>
                                                     </div>
                                                 {% endfor %}
                                             </div>
@@ -112,8 +124,23 @@
 {% block required_js %}
     <!-- {{ block.super }} -->
     <!-- Required vendors -->
+    <script>
+        var gallery_defaults = {
+        share: false,
+        facebook: true,
+        facebookDropdownText: 'Facebook111',
+        twitter: true,
+        twitterDropdownText: 'Twitter',
+        googlePlus: true,
+        googlePlusDropdownText: 'GooglePlus',
+        pinterest: true,
+        pinterestDropdownText: 'Pinterest'
+    };
+    </script>
     <script src="{% static './vendor/global/global.min.js' %}"></script>
         <!--  -->
+
+    <script src="{% static './vendor/lightgallery/js/lightgallery-all.min.js' %}"></script>
     <script src="{% static './vendor/jquery-steps/build/jquery.steps.min.js' %}"></script>
     <script src="{% static './vendor/jquery-validation/jquery.validate.min.js' %}"></script>
     <!-- Form validate init -->
@@ -134,6 +161,27 @@
             $('#smartwizard').smartWizard(); 
         });
     </script>
+    <!-- <script>
+
+        function scrollToNext(nextParagraphId) {
+          const navbarHeight = document.getElementById('navbar').offsetHeight;
+          const nextParagraph = document.getElementById(nextParagraphId);
+          if (nextParagraph) {
+                // window.scrollBy(0, -navbarHeight); // Adjust scroll position to consider navbar
+                nextParagraph.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+    </script> -->
+    <!-- <script>
+        function scrollToNext(text_id) {
+            const navbarHeight = document.getElementById('navbar').offsetHeight;
+            const nextParagraph = document.getElementById(text_id).nextElementSibling;
+          if (nextParagraph) {
+              nextParagraph.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              window.scrollBy(0, 2 * navbarHeight); // Adjust scroll position to consider navbar
+            };
+        }
+    </script> -->
 {% endblock required_js %}
 
 

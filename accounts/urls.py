@@ -10,7 +10,12 @@ from .views import (
                     ProfileUpdateView,
                     ProfileCreateView,
                     CustomResetPasswordConfirmView,
+                    CustomLoginView,
                     CheckCodeView,
+                    AdminQuizListView,
+                    AdminUserListView,
+                    change_user_level_view
+
                     )
 
 urlpatterns = [
@@ -21,8 +26,12 @@ urlpatterns = [
     path('profile-create/', ProfileCreateView.as_view(), name='profile_create'),
     path('profile-update/<str:pk>/', ProfileUpdateView.as_view(), name='profile_update'),
 
+    path('change-user-level/', change_user_level_view, name="change_user_level"),
+    path('quiz-list/', AdminQuizListView.as_view(), name="quiz_list"),
+    path('user-list/', AdminUserListView.as_view(), name="user_list"),
+
     path('register/', RegisterView.as_view(), name='register'),
-    path('login/', admin_views.LoginView.as_view(), name='login'),
+    path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', admin_views.LogoutView.as_view(), name='logout'),
     path('password-change/', admin_views.PasswordChangeView.as_view(), name='password_change'),
     path('password-change-done/', admin_views.PasswordChangeDoneView.as_view(), name='password_change_done'),

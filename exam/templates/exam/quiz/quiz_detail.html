@@ -18,6 +18,7 @@
     <link href="{% static './vendor/jquery-smartwizard/dist/css/smart_wizard.min.css' %}" rel="stylesheet">
     <!-- Custom Stylesheet -->
 	<link href="{% static './vendor/jquery-nice-select/css/nice-select.css' %}" rel="stylesheet">
+	<link href="{% static './vendor/lightgallery/css/lightgallery.min.css' %}" rel="stylesheet">
     <link href="{% static './css/style.css' %}" rel="stylesheet">
     <link href="{% static './css/custumize.css' %}" rel="stylesheet">
 
@@ -28,21 +29,37 @@
         Main wrapper start
     ***********************************-->
     <div id="main-wrapper">
-                    
+	{% block page_header_name %}
+		ویرایش آزمون
+	{% endblock page_header_name %}       
 
     {% block content %}
         <!--**********************************
             Content body start
         ***********************************-->
-        <div class="content-body">
+        <div class="content-body farsi">
             <div class="container-fluid " dir="rtl">
-				<div class="row page-titles">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
-						<li class="breadcrumb-item"><a href="javascript:void(0)">Components</a></li>
-					</ol>
+				{% include "message.html" %}
+                <div class="row page-titles farsi">
+                    <ol class="breadcrumb" dir="rtl" style="text-align: right;">
+                        <li class="breadcrumb-item active"><a href="">مدیریت آزمون</a></li>
+                        <li class=""><a href="">
+                            <span class="text-primary">&nbsp; / </span>
+                             ویرایش سوالات 
+                             </a></li>
+                        <!-- <li class="breadcrumb-item"><a href=""></a></li> -->
+                        <!-- <li class=""><a href="">طراح سوالات : {{quiz.quiz_maker}}</a></li> -->
+                    </ol>
                 </div>
-               
+				<div class=" card align-items-center "  dir="rtl" style="align-items: center;min-height: 3em;">
+					<div class="" style="text-align: center;">
+						<h4 class="mb-0" style="padding: 1em;">برای ویرایش  مشخصات آزمون <a class="text-primary" href="{% url 'quiz_update' quiz.id %}" style="font-size: large;font-weight: bold;;" class="">اینجا</a> کلیک کنید</h4>
+						<!-- <a href="courses.html" class="btn btn-primary btn-sm">View all</a> -->
+					</div>
+				</div>
+				<!-- <div class="content-body farsi	 "> -->
+
+				<!-- </div> -->
 
 				<!-- *****************************
 					radi button start
@@ -99,6 +116,14 @@
 										</div>
 										<div class="card-body">
 											<div class="basic-form">
+												{% if question.image %}
+												<div id="" class="" style="text-align: center;"> 
+													<a href="{{question.image.url}}" data-exthumbimage="images/big/img1.jpg" data-src="images/big/img1.jpg" class="col-lg-3 col-md-6 mb-4">
+														<img class="image-container-zoom-cus" src="{{question.image.url}}" alt="" style="max-height: 10em;margin-right:1.5em;border-radius: 1em;display: block; margin: 0 auto;"/>
+														<p style="font-size: 0.7em;white-space: nowrap;">با کلیک بر تصویر بزرگنمایی کنید.</p>
+													</a>
+												</div>
+												{% endif %}
 													<div class="row">
 														<div class="col-xl-4 col-xxl-12 col-12">
 															<div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
@@ -214,7 +239,7 @@
     <script src="{% static './vendor/jquery-validation/jquery.validate.min.js' %}"></script>
     <!-- Form validate init -->
     <script src="{% static './js/plugins-init/jquery.validate-init.js' %}"></script>
-
+	<script src="{% static './vendor/lightgallery/js/lightgallery-all.min.js' %}"></script>
 
 	<!-- Form Steps -->
 	<script src="{% static './vendor/jquery-smartwizard/dist/js/jquery.smartWizard.js' %}"></script>
@@ -229,6 +254,17 @@
             // SmartWizard initialize
 			$('#smartwizard').smartWizard(); 
 		});
+		// lightGallery(document.getElementById('gallery-hash-demo-1'), {
+		// 	galleryId: 1
+		// });
+		
+		// lightGallery(document.getElementById('gallery-hash-demo-2'), {
+		// 	galleryId: 2
+		// });
+		// lightGallery(document.getElementById('gallery-hash-demo-3'), {
+		// 	galleryId: 3
+		// });
+
 	</script>
 	<script>
 		function deleteQuiz(quiz_id){
@@ -236,8 +272,29 @@
 
 		button.value = quiz_id;}
 	</script>
+	<script>
+		// function multipleLightGallery(lightGalleryId){
+		// lightGallery(document.getElementById(lightGalleryId), {
+		// 	galleryId: lightGalleryId
+		// });
+		// }
+	</script>
+<script>
+	function zoomImage() {
+	  const img = document.getElementById('zoomImg');
+	  img.classList.toggle('zoomed');
+	  document.body.addEventListener('click', function(event) {
+		if (!img.contains(event.target)) {
+		  img.classList.remove('zoomed');
+		}
+	  });
+	}
+  </script>
     {% endblock required_js %}
 
 
 
 </html>
+
+
+

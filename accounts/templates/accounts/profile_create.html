@@ -8,11 +8,11 @@
 
 {% block head %}
     <!-- Custom Stylesheet -->
-	<link href="{% static './vendor/jquery-nice-select/css/nice-select.css' %}" rel="stylesheet">
-    <link href="{% static './css/style.css' %}" rel="stylesheet">
-    <link href="{% static './css/custumize.css' %}" rel="stylesheet">
-{% endblock head %}
 
+{% endblock head %}
+{% block page_header_name %}
+  ساخت پروفایل
+{% endblock page_header_name %}
 {% block content %}
         <!--**********************************
             Content body start
@@ -108,7 +108,7 @@
 														</div>
                                                     </div>
                                                     <div class="col-lg-4">
-                                                        <button type="button" onclick="send_code()" class="btn btn-primary btn-block">ارسال کد تایید</button>
+                                                        <button type="button" onclick="send_code()" class="btn btn-primary btn-block" style="margin-top: 1em;">ارسال کد تایید</button>
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
@@ -123,7 +123,7 @@
 														</div>
                                                     </div>
                                                     <div class="col-lg-4">
-                                                        <span class="btn btn-primary btn-block"> کد تایید</span>
+                                                        <!-- <span class="btn btn-primary btn-block"> کد تایید</span> -->
                                                     </div>
                                                 </div>
 

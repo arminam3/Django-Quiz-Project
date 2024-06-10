@@ -185,13 +185,13 @@
                         </div>
                         <div class="navbar-nav header-right" dir="ltr">
 							<div class="nav-item d-flex align-items-center" style="position: absolute;left: 0em;top:1.5em;">
-								<div class="input-group search-area">
+								<!-- <div class="input-group search-area">
 									<span class="input-group-text"><a href="javascript:void(0)"><svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 										<path d="M27.414 24.586L22.337 19.509C23.386 17.928 24 16.035 24 14C24 8.486 19.514 4 14 4C8.486 4 4 8.486 4 14C4 19.514 8.486 24 14 24C16.035 24 17.928 23.386 19.509 22.337L24.586 27.414C25.366 28.195 26.634 28.195 27.414 27.414C28.195 26.633 28.195 25.367 27.414 24.586ZM7 14C7 10.14 10.14 7 14 7C17.86 7 21 10.14 21 14C21 17.86 17.86 21 14 21C10.14 21 7 17.86 7 14Z" fill="var(--secondary)"/>
 										</svg>
 										</a></span>
 									<input type="text" class="form-control" placeholder="Search here...">
-								</div>
+								</div> -->
 							</div>
 							<div class="dlab-side-menu">	
 								<div hidden class="search-coundry d-flex align-items-center">
@@ -220,13 +220,13 @@
 												<div id="DZ_W_TimeLine02" class="widget-timeline dlab-scroll style-1 ps ps--active-y p-3 height370">
 													<h4 class="text-center border-bottom pb-2">پیام ها</h4>
 													<ul class="timeline" dir="rtl">
-														{% for notificaiton in notificaitons %}
+														{% for notification in notifications %}
 														<li id="seen-{{forloop.counter}}">
 															<div class="timeline-badge primary align-item-right" style="align-items:start ;"></div>
 															<span class="timeline-panel text-muted" href="">
-																<h6 class="mb-0 farsi" style="text-align: right;" >{{notificaiton.title|truncatechars:40}}<strong class="text-primary"></strong>.</h6>
-																<span dir="rtl" style="text-align: right;">{{notificaiton.text|truncatechars:60}}</span>
-																<button onclick="seen_notification('seen-{{forloop.counter}}', '{{notificaiton.id}}')"  class="btn btn-outline-primary" style="border: none;">دیدم</button>
+																<h6 class="mb-0 farsi" style="text-align: right;" >{{notification.title|truncatechars:40}}<strong class="text-primary"></strong>.</h6>
+																<span dir="rtl" style="text-align: right;">{{notification.text|truncatechars:60}}</span>
+																<button onclick="seen_notification('seen-{{forloop.counter}}', '{{notification.id}}')"  class="btn btn-outline-primary" style="border: none;">دیدم</button>
 															</span>
 														</li>
 														{% endfor %}
@@ -275,13 +275,13 @@
 									</ul>
 								</div>	
 								<ul>
-									{% if user.is_authenticated %}
 									<li class="nav-item dropdown header-profile">
 										
 										<a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
 											<img src="{% static 'cus_image/doctor.png' %}" width="20" alt="" style="border: none;">
 										</a>
 										<div class="dropdown-menu dropdown-menu-end farsi" style="text-align: right;" dir="rtl">
+											{% if user.is_authenticated %}
 											{% if user.profile %}
 											<a href="{% url 'profile' %}" class="dropdown-item ai-icon">
 												<svg id="icon-user2" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -302,9 +302,18 @@
 											</form>
 											
 
+											{% else %}
+											<a href="{% url 'login' %}" class="dropdown-item ai-icon">
+												<svg id="icon-user2" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+												<span class="ms-2">ورود</span>
+											</a>
+											<a href="{% url 'register' %}" class="dropdown-item ai-icon">
+												<i class="bi bi-people text-primary" style="font-size: large;"  width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></i>
+												<span class="ms-2">ثبت نام</span>
+											</a>
+											{% endif %}
 										</div>
 									</li>
-									{% endif %}
 								</ul>	
 							</div>	
                         </div>
@@ -363,112 +372,70 @@
 							</span>
 						</a>
                     </li>
-
 					{% endif %}
 
-                    <li><a class="" href="{% url 'quiz_create' %}" aria-expanded="false">
-						<i class="bi bi-info-circle"></i>
+					{% if user.is_authenticated %}
+						<li><a class="" href="{% url 'quiz_create' %}" aria-expanded="false">
+							<i class="bi bi-info-circle"></i>
 							<span class="nav-text">ساخت آزمون</span>
 						</a>
-
-                    </li>
-                    <li><a class="" href="{% url 'quiz_list' %}" aria-expanded="false">
+						</li>
+					{% endif %}
+					{% if user.is_staff %}
+					  
+                    <li><a class="has-arrow" href="//" aria-expanded="false">
 						<i class="bi bi-list"></i>
-							<span class="nav-text">لیست آزمون ها</span>
-						</a>
-
-                    </li>
-					{% if user.is_authenticated %}
-                    <li><a class="has-arrow " href="{% url 'notification_list' %}" aria-expanded="false">
+						<span class="nav-text">مدیریت سایت</span>
+					</a>
+					<ul aria-expanded="false">
+						<li><a href="{% url 'quiz_list' %}">لیست آزمون ها</a></li>
+						<li><a href="{% url 'user_list' %}">لیست کاربران</a></li>
+					</ul>
+				</li>
+				{% endif %}
+				{% if user.is_authenticated %}
+					<li><a class="" href="{% url 'notification_create' %}" aria-expanded="false">
+						<i class="fas fa-paper-plane"></i>
+						<span class="nav-text">ارسال پیام</span>
+					</a>
+					</li>
+					{% endif %}
+                    <li><a class="" href="{% url 'notification_list' %}" aria-expanded="false">
 						<i class="far fa-comment-alt"></i>
 						<span class="nav-text">پیام ها</span>
 					</a>
 					</li>
-					{% endif %}
-                    <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <!-- <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
 							<i class="bi bi-star"></i>
 							<span class="nav-text">Bootstrap</span>
 						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="./ui-accordion.html">Accordion</a></li>
-                            <li><a href="./ui-alert.html">Alert</a></li>
-                            <li><a href="./ui-badge.html">Badge</a></li>
-                            <li><a href="./ui-button.html">Button</a></li>
-                            <li><a href="./ui-modal.html">Modal</a></li>
-                            <li><a href="./ui-button-group.html">Button Group</a></li>
-                            <li><a href="./ui-list-group.html">List Group</a></li>
-                            <li><a href="./ui-card.html">Cards</a></li>
-                            <li><a href="./ui-carousel.html">Carousel</a></li>
-                            <li><a href="./ui-dropdown.html">Dropdown</a></li>
-                            <li><a href="./ui-popover.html">Popover</a></li>
-                            <li><a href="./ui-progressbar.html">Progressbar</a></li>
-                            <li><a href="./ui-tab.html">Tab</a></li>
-                            <li><a href="./ui-typography.html">Typography</a></li>
-                            <li><a href="./ui-pagination.html">Pagination</a></li>
-                            <li><a href="./ui-grid.html">Grid</a></li>
-
-                        </ul>
-                    </li>
-                    <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    </li> -->
+                    <!-- <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
 							<i class="bi bi-heart"></i>
 							<span class="nav-text">Plugins</span>
 						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="./uc-select2.html">Select 2</a></li>
-                            <li><a href="./uc-nestable.html">Nestedable</a></li>
-                            <li><a href="./uc-noui-slider.html">Noui Slider</a></li>
-                            <li><a href="./uc-sweetalert.html">Sweet Alert</a></li>
-                            <li><a href="./uc-toastr.html">Toastr</a></li>
-                            <li><a href="./map-jqvmap.html">Jqv Map</a></li>
-							<li><a href="./uc-lightgallery.html">Light Gallery</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="widget-basic.html" class="" aria-expanded="false">
+                    </li> -->
+                    <!-- <li><a href="widget-basic.html" class="" aria-expanded="false">
 							<i class="bi bi-gear-wide"></i>
 							<span class="nav-text">Widget</span>
 						</a>
-					</li>
+					</li> -->
                     <li><a class=" " href="javascript:void(0);" aria-expanded="false">
 							<i class="bi bi-file-earmark-check"></i>
 							<span class="nav-text">همکاری در طراحی سوالات</span>
 						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="./form-element.html">Form Elements</a></li>
-                            <li><a href="./form-wizard.html">Wizard</a></li>
-                            <li><a href="./form-ckeditor.html">CkEditor</a></li>
-                            <li><a href="form-pickers.html">Pickers</a></li>
-                            <li><a href="form-validation.html">Form Validate</a></li>
-                        </ul>
                     </li>
-                    <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <!-- <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
 							<i class="bi bi-file-earmark-spreadsheet"></i>
 							<span class="nav-text">Table</span>
 						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="table-bootstrap-basic.html">Bootstrap</a></li>
-                            <li><a href="table-datatable-basic.html">Datatable</a></li>
-                        </ul>
-                    </li>
-                    <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    </li> -->
+                    <!-- <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
 							<i class="bi bi-file-earmark-break"></i>
 							<span class="nav-text">Pages</span>
 						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="./page-login.html">Login</a></li>
-                            <li><a href="./page-register.html">Register</a></li>
-                            <li><a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Error</a>
-                                <ul aria-expanded="false">
-                                    <li><a href="./page-error-400.html">Error 400</a></li>
-                                    <li><a href="./page-error-403.html">Error 403</a></li>
-                                    <li><a href="./page-error-404.html">Error 404</a></li>
-                                    <li><a href="./page-error-500.html">Error 500</a></li>
-                                    <li><a href="./page-error-503.html">Error 503</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./page-lock-screen.html">Lock Screen</a></li>
-                            <li><a href="./empty-page.html">Empty Page</a></li>
-                        </ul>
-                    </li>
+
+                    </li> -->
                 </ul>
 				<!-- <div class="copyright"> -->
 					<!-- <p><strong>GetSkills Online Learning Admin</strong> © 2022 All Rights Reserved</p>
@@ -492,7 +459,7 @@
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed   by <a href="https://themeforest.net/user/hugebinary" target="_blank">HugeBinary</a> 2022</p>
+                <p>Copyright © Designed   by <a href="ss" target="_blank">HugeBinary</a> 2022</p>
             </div>
         </div>
         <!--**********************************
@@ -547,13 +514,13 @@
 			setTimeout(function(){
 				dlabSettingsOptions.version = "{{request.session.theme}}"
 				new dlabSettings(dlabSettingsOptions);
-			},1500)
+			},3000)
 		});
 	</script>  
 	<!--  Added JS -->
 	<script>
-		var aa = [30, 50, 30, 60, 90, 70, 90]
-		var theme = '{{request.session.theme}}'
+		// var aa = [30, 50, 30, 60, 90, 70, 90]
+		// var theme = '{{request.session.theme}}'
 	</script>
 	<script>
 		document.getElementById('themeForm').addEventListener('submit', function(event) {
@@ -572,11 +539,32 @@
 					body.setAttribute('data-theme-version', 'dark');
 					theme_icon.classList.remove("fa-moon")
 					theme_icon.classList.add("fa-sun")
+					$(document).ready(function(){
+					$(".booking-calender .fa.fa-clock-o").removeClass(this);
+					$(".booking-calender .fa.fa-clock-o").addClass('fa-clock');
+					});
 					
+					jQuery(document).ready(function(){
+						setTimeout(function(){
+							dlabSettingsOptions.version = 'dark'
+							new dlabSettings(dlabSettingsOptions);
+						},3000)
+					});
 				} else {
 					body.setAttribute('data-theme-version', 'light');
 					theme_icon.classList.remove("fa-sun")
 					theme_icon.classList.add("fa-moon")
+					$(document).ready(function(){
+					$(".booking-calender .fa.fa-clock-o").removeClass(this);
+					$(".booking-calender .fa.fa-clock-o").addClass('fa-clock');
+					});
+					
+					jQuery(document).ready(function(){
+						setTimeout(function(){
+							dlabSettingsOptions.version = "light"
+							new dlabSettings(dlabSettingsOptions);
+						},3000)
+					});
 				}
 				})
 				.catch(error => {

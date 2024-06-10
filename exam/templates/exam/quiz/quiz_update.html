@@ -1,0 +1,163 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load my_tags %}
+{% load humanize %}
+
+
+{% block title %}
+  <title>ویرایش آزمون</title>
+{% endblock title %}
+
+
+{% block head %}
+<link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+
+<!-- FAVICONS ICON -->
+<link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+<!-- Form step -->
+<link href="{% static './vendor/jquery-smartwizard/dist/css/smart_wizard.min.css' %}" rel="stylesheet">
+<!-- Custom Stylesheet -->
+<link href="{% static './vendor/jquery-nice-select/css/nice-select.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static './vendor/select2/css/select2.min.css' %}">
+<link href="{% static './css/style.css' %}" rel="stylesheet">
+<link href="{% static './css/custumize.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block page_header_name %}
+  ویرایش آزمون
+{% endblock page_header_name %}
+
+{% block content %}
+<div class="content-body farsi">
+    <div class="container-fluid " dir="rtl">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 "  style="font-size: medium ;">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title farsi ">مشخصات آزمون را اصلاح کنید :</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <form  action="{% url 'quiz_update' quiz.id %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="mb-1 row">
+                                    <label class="col-sm-2 col-form-label text-primary" >
+                                        <b>نام آزمون : </b>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" value="{{quiz.name}}" placeholder="نام آزمون را اضافه کنید" style="margin-bottom: 0.5em;" required name="name">
+                                    </div>
+                                </div>
+
+                                <!-- <div class="col-xl-6"> -->
+                                    <div class="mb-1 row form-material">
+                                        <label class="col-form-label col-sm-2 pt-0 farsi">تصویر جدید  :</label>
+                                        <div class="col-sm-9" style="margin-bottom: 0.5em;">
+                                            <div class="input-group custom_file_input">
+                                                <div class="form-file">
+                                                    <input type="file" class="form-file-input form-control" name="image" value="{{quiz.image.url}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="col-form-label col-sm-2 pt-0 farsi">تصویر فعلی  :</label>
+                                        <div class="col-sm-9" style="margin-bottom: 0.5em;display: flex; justify-content: center; align-items: center;">
+                                            <div class="dlab-media" style="border-radius: 5px;">
+                                                {% if  quiz.image %}
+                                                    <img src="{{quiz.image.url}}" alt="" style="max-height: 15em;border-radius: 5px;">
+                                                {% else %}
+                                                    <img src="{% static 'cus_image/default_quiz_image.jpg' %}" alt="" style="max-height: 15em;border-radius: 5px;">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <label class="col-sm-2 col-form-label" >نام درس :</label>
+                                        <div class="col-sm-4">
+                                         
+                                            <select class="farsi" id="single-select" dir="rtl" name="lesson">
+                                                <option  value="{{quiz.lesson.id}}"  style="font-size: small;" selected>{{quiz.lesson.name}} | استاد {{quiz.lesson.master}}  </option>
+                                                {% for lesson in lessons %}                
+                                                  <option  value="{{lesson.id}}"  style="font-size: small;">{{lesson.name}} | استاد {{lesson.master}} </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <label class="col-sm-2 col-form-label" >زمان پیشنهادی : </label>
+                                        <div class="col-xl-3 col-xxl-3 col-md-3 input-group clockpicker" dir="ltr">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                            <input dir="rtl" type="number" class="form-control" placeholder="دقیقه" name="time" value="{{ quiz_time }}" required>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="mb-1 row">
+                                    
+                                </div>
+                            <div class="mb-1 row">
+                                <div class="col-sm-5"></div>
+                                <div class="col-sm-5 " style="align-items: center;">
+                                    <button type="submit" class="btn btn-primary ">ذخیره تغییرات آزمون</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+        
+{% endblock content %}
+
+
+{% block required_js %}
+<script src="{% static './vendor/global/global.min.js' %}"></script>
+<script src="{% static './vendor/jquery-steps/build/jquery.steps.min.js' %}"></script>
+<script src="{% static './vendor/jquery-validation/jquery.validate.min.js' %}"></script>
+<!-- Form validate init -->
+<script src="{% static './js/plugins-init/jquery.validate-init.js' %}"></script>
+
+
+<!-- Form Steps -->
+<script src="{% static './vendor/jquery-smartwizard/dist/js/jquery.smartWizard.js' %}"></script>
+<script src="{% static 'vendor/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
+
+<!-- select 2 -->
+<script src="{% static './vendor/select2/js/select2.full.min.js' %}"></script>
+<script src="{% static './js/plugins-init/select2-init.js' %}"></script>
+
+<script src="{% static './js/custom.js' %}"></script>
+<script src="{% static './js/dlabnav-init.js' %}"></script>
+<script src="{% static './js/demo.js' %}"></script>
+<script src="{% static './js/styleSwitcher.js' %}"></script>
+<script>
+$(document).ready(function(){
+    // SmartWizard initialize
+    $('#smartwizard').smartWizard(); 
+});
+</script>
+<script>
+    $(function () {
+        $('#datetimepicker').datetimepicker({
+            inline: true,
+        });
+    });
+    
+    $(document).ready(function(){
+        $(".booking-calender .fa.fa-clock-o").removeClass(this);
+        $(".booking-calender .fa.fa-clock-o").addClass('fa-clock');
+    });
+    
+    jQuery(document).ready(function(){
+        setTimeout(function(){
+            dlabSettingsOptions.version = '{{request.sessions.theme}}';
+            new dlabSettings(dlabSettingsOptions);
+        },1500)
+    });
+</script> 
+
+{% endblock required_js %}

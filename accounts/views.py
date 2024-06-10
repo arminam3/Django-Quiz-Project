@@ -1,6 +1,7 @@
+from django.forms import BaseModelForm
 from django.http import JsonResponse
-from django.http.response import HttpResponse as HttpResponse
-from django.shortcuts import render, redirect
+from django.http.response import HttpResponse, HttpResponseForbidden
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import CreateView, DetailView, TemplateView, UpdateView, ListView
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout
@@ -16,15 +17,21 @@ from django.contrib import messages
 from django.contrib.auth.password_validation import validate_password
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 
 from .models import Profile, VerificationCode
-from .forms import RegisterForm, CustomPasswordResetForm
-from exam.models import Question
-from takingtest.models import QuizResult,QuizHistory
-from .mixins import DoNotHaveProfileMixin, CheckHavingProfileMixin, SmsSendLimitByIpMixin
-# from .models import Profile
+from .forms import RegisterForm, CustomPasswordResetForm, ProfileUpdateForm
+from .mixins import (
+                        DoNotHaveProfileMixin, 
+                        CheckHavingProfileMixin, 
+                        SmsSendLimitByIpMixin, 
+                        IsStaffUserMixin
+                    )
 from .send_code import send_code
+
+from takingtest.models import QuizResult,QuizHistory
+from exam.models import Quiz
 
 class RegisterView(CreateView):
     model = get_user_model()
@@ -97,34 +104,41 @@ class ProfileDetailView(CheckHavingProfileMixin, TemplateView):
 class ProfileUpdateView(CheckHavingProfileMixin, UpdateView):
     model = Profile
     template_name = "accounts/profile_update.html"
-    fields = ('term', 'phone_number', 'gender')
-    success_url = reverse_lazy('profile')
+    form_class = ProfileUpdateForm
 
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            f"<strong>اطلاعات شما با موفقیت تغییر یافت !</strong>"
+        )
+        return reverse('profile')
 
     def post(self, request, *args, **kwargs):
         posted_data = self.request.POST
-        profile = Profile.objects.get(id=kwargs.get('pk'))
-
+        # tyr to change user data else create a error message
         try:
-                
-            profile.term = int(posted_data.get('term'))
-            # profile.phone_number = posted_data.get('phone_number')
-            profile.gender = posted_data.get('gender')
-            profile.discipline = posted_data.get('discipline')
-            profile.save()
-
             user = self.request.user
             user.first_name = posted_data.get('first_name')
             user.last_name = posted_data.get('last_name')
             user.email = posted_data.get('email')
             user.save()
         except:
-            pass
+            messages.error(
+            self.request,
+            f"<strong>خطا !</strong> اطلاعات را کامل و به شکل صحیح وارد کنید."
+            )
 
         return super().post(request, *args, **kwargs)
     
+    def form_valid(self, form):
+        return super().form_valid(form)
+    
     def form_invalid(self, form) :
         # create a message that say your form have a problem
+        messages.error(
+            self.request,
+            f"<strong>خطا !</strong> اطلاعات را کامل و به شکل صحیح وارد کنید."
+        )
         return super().form_invalid(form)
     
 
@@ -136,6 +150,7 @@ class ProfileCreateView(LoginRequiredMixin, DoNotHaveProfileMixin, CreateView):
     fields = ('term', 'phone_number', 'gender')
 
     def get(self, request, *args, **kwargs):
+        # if get request have phone_number send verification code 
         if request.GET.get('phone_number'):
             phone_number = request.GET.get('phone_number')
             verification_code = VerificationCode.objects.filter(user=request.user).order_by('-datetime_created')
@@ -190,10 +205,12 @@ class ProfileCreateView(LoginRequiredMixin, DoNotHaveProfileMixin, CreateView):
         form.instance.user = user
         form.instance.phone_number_confirm = True
 
+        # try to set user values 
         try:
             user.first_name = posted_data.get('first_name')
             user.last_name = posted_data.get('last_name')
-            user.email = posted_data.get('first_name')
+            user.email = posted_data.get('email')
+            user.save()
         except:
             self.form_invalid()
         return super().form_valid(form)
@@ -225,9 +242,7 @@ class ProfileCreateView(LoginRequiredMixin, DoNotHaveProfileMixin, CreateView):
             user_entries['fields']['term'] = 'ترم <br>'
         if not form.cleaned_data.get('gender'):
             user_entries['fields']['gender'] = 'جنسیت <br>'
-        
-
-
+    
         self.request.session['user_entries'] = user_entries
         return super().form_invalid(form)
     
@@ -244,25 +259,38 @@ class ProfileCreateView(LoginRequiredMixin, DoNotHaveProfileMixin, CreateView):
                 f"<strong>اخطار !</strong> لطفا اطلاعات وارد شده را اصلاح کنید"
                 )
                 del self.request.session['user_entries']
-            
-
-
         return context
     
 
 class CustomLoginView(admin_views.LoginView):
-    def form_valid(self, form: admin_views.AuthenticationForm):
-        posted_data = self.request.POST
-        form.instance.username = posted_data.get('username')
-        form.instance.password = posted_data.get('password')
-        return super().form_valid(form)
+    def post(self, request, *args: str, **kwargs):
+        posted_data = request.POST
+        # if username is not exist return error message
+        try:
+            requested_user = get_user_model().objects.get(username=posted_data['username'])
+        except:
+            messages.error(
+            self.request,
+            f"<strong>خطا !</strong>نام کاربری وارد شده وجود ندارد."
+            )
+            return super().post(request, *args, **kwargs)
+        # return error message when pssword is incorrect
+        if not requested_user.check_password(posted_data['password']):
+            messages.error(
+            self.request,
+            f"<strong>خطا !</strong>رمز وارد شده صحیح نمی باشد . "
+            )
+        return super().post(request, *args, **kwargs)
     
-
-
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            f"<strong> خوش آمدید</strong>"
+        )
+        return super().get_success_url()
 
 
 class CheckCodeView(SmsSendLimitByIpMixin, TemplateView):
-    # form_class = CustomPasswordResetForm
     success_url = reverse_lazy('profile')
     template_name = "registration/send_reset_code.html"
 
@@ -270,8 +298,9 @@ class CheckCodeView(SmsSendLimitByIpMixin, TemplateView):
         if request.GET.get('username'):
             username = request.GET.get('username')  
             verification_code = VerificationCode.objects.filter(user__username=username).order_by('-datetime_created')
+
             # check user can send only one sms per 2 minutes
-            if verification_code :
+            if verification_code:
                 time_diffrence = timezone.now() - verification_code[0].datetime_created
                 if time_diffrence.total_seconds() < 1    :
                     messages.error(
@@ -386,6 +415,137 @@ def CustomResetPasswordConfirmView(request):
     else :
         return render(request, 'registration/custom_password_reset_confirm.html', context)
 
+
+
+class AdminQuizListView(IsStaffUserMixin, ListView):
+    template_name = "accounts/admin_quiz_list.html"
+    context_object_name = "quiz_list"
+
+    def get_queryset(self):
+        return Quiz.objects.filter(is_deleted=False)
+    
+    
+
+class AdminUserListView(IsStaffUserMixin, ListView):
+    model = get_user_model()
+    template_name = "accounts/admin_user_list.html"
+    context_object_name = "user_list"
+
+
+@login_required
+def change_user_level_view(request):
+    choosen_user = get_object_or_404(get_user_model(), id=request.GET.get('user_id'))
+    action = request.GET.get('action')
+    user = request.user
+    try:
+        Profile.objects.get(user=choosen_user)
+    except:
+        # Set is_active = False for user that dont have profile . for othere user show error
+        if action == 'deactivate':
+            choosen_user.is_active = False
+            messages.success(
+            request,
+            f"<strong> درخواست موفق . </strong> کاربر تغییر یافت ."
+            )
+            return JsonResponse({'success': 'some error'}, status=200)
+        else:
+            messages.error(
+                request,
+                f"<strong> خطا !</strong> کاربر پروفایل ندارد . برای ارتقا باید کاربر پروفایل داشته باشد ."
+            )
+            return JsonResponse({'error': 'some error'}, status=500)
+    profile = choosen_user.profile
+
+        
+        
+
+
+    if action == 'deactivate':
+        if user.is_staff or user.is_superuser:
+            choosen_user.is_active = False
+            choosen_user.is_staff = False
+            choosen_user.is_superuser = False
+            profile.is_quiz_maker = False
+            choosen_user.save()
+            profile.save()
+        else:
+            messages.error(
+                    request,
+                    f"<strong> خطا !</strong>لطفا دو مقدار برابر وارد کنید ."
+                )
+            return JsonResponse({'error': 'some error'}, status=500)
+
+
+    elif action == 'activate':
+        if user.is_staff or user.is_superuser:
+            choosen_user.is_active = True
+            choosen_user.is_staff = False
+            choosen_user.is_superuser = False
+            profile.is_quiz_maker = False
+            choosen_user.save()
+            profile.save()
+        else:
+            messages.error(
+                    request,
+                    f"<strong> خطا !</strong>تغییر مورد نظر شما ممکن نیست ."
+                )
+            return JsonResponse({'error': 'some error'}, status=500)
+
+
+    elif action == 'BeQuizMaker':
+        if user.is_staff or user.is_superuser:
+            choosen_user.is_active = True
+            choosen_user.is_staff = False
+            choosen_user.is_superuser = False
+            profile.is_quiz_maker = True
+            choosen_user.save()
+            profile.save()
+        else:
+            messages.error(
+                    request,
+                    f"<strong> خطا !</strong>تغییر مورد نظر شما ممکن نیست ."
+                )
+            return JsonResponse({'error': 'some error'}, status=500)
+
+
+    elif action == 'BeStaff':
+        if user.is_superuser:
+            choosen_user.is_active = True
+            choosen_user.is_staff = True
+            choosen_user.is_superuser = False
+            profile.is_quiz_maker = True
+            choosen_user.save()
+            profile.save()
+        else:
+            messages.error(
+                    request,
+                    f"<strong> خطا !</strong>تغییر مورد نظر شما ممکن نیست ."
+                )
+            return JsonResponse({'error': 'some error'}, status=500)
+
+
+    elif action == 'BeStudent':
+        if user.is_staff or user.is_superuser:
+            choosen_user.is_active = True
+            choosen_user.is_staff = False
+            choosen_user.is_superuser = False
+            profile.is_quiz_maker = False
+            choosen_user.save()
+            profile.save()
+        else:
+            messages.error(
+                    request,
+                    f"<strong> خطا !</strong>تغییر مورد نظر شما ممکن نیست ."
+                )
+            
+            return JsonResponse({'error': 'some error'}, status=500)
+        
+    messages.success(
+            request,
+            f"<strong> درخواست موفق . </strong>کاربر تغییر یافت ."
+        )
+    return JsonResponse({'success': 'ok'}, status=200)
+    
 
 
 

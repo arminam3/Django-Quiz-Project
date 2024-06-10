@@ -34,10 +34,11 @@ class Profile(models.Model):
     term = models.PositiveIntegerField(default=1)
     discipline = models.CharField(choices=CHOICES, max_length=7, default=1)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=7)
+    is_quiz_maker = models.BooleanField(default=False)
 
 
     def j_datetime_joined(self):
-        return jalali_convertor(self.last_login)
+        return jalali_convertor(self.user.last_login)
     
 
 class VerificationCode(models.Model):

@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 
 {% load static %}
-{% load jformat %}
+{% load my_tags %}
 	
 	<!-- PAGE TITLE HERE -->
 	{% block title %}
@@ -20,7 +20,9 @@
 
     {% endblock head %}
 
-
+    {% block page_header_name %}
+        مدریریت آزمون ها
+    {% endblock page_header_name %}
 
     <!--**********************************
         Main wrapper start
@@ -34,11 +36,16 @@
         <div class="content-body" dir="rtl">
             <div class="container-fluid">
 				
-				<div class="row page-titles">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item active"><a href="javascript:void(0)">Table</a></li>
-						<li class="breadcrumb-item"><a href="javascript:void(0)">Datatable</a></li>
-					</ol>
+                <div class="row page-titles farsi">
+                    <ol class="breadcrumb" dir="rtl" style="text-align: right;">
+                        <li class="breadcrumb-item active"><a href="">مدیریت سایت </a></li>
+                        <li class=""><a href="">
+                            <span class="text-primary">&nbsp; / </span>
+                             لیست آزمون ها 
+                             </a></li>
+                        <!-- <li class="breadcrumb-item"><a href=""></a></li> -->
+                        <!-- <li class=""><a href="">طراح سوالات : {{quiz.quiz_maker}}</a></li> -->
+                    </ol>
                 </div>
                 <!-- row -->
 
@@ -87,7 +94,7 @@
                                                                 data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
-                                                            <a href="{% url 'quiz_detail' quiz.id %}" class="btn btn-info shadow btn-xs sharp me-1">
+                                                            <a href="{% url 'quiz_question_update' quiz.id %}" class="btn btn-info shadow btn-xs sharp me-1">
                                                                 <i class="fas fa-pencil-alt"></i>
                                                             </a>
                                                         </div>												

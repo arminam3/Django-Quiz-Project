@@ -8,6 +8,7 @@ from .views import (
                     TakenExamDetail,
                     QuickQuizView,
                     QuizResultListView,
+                    LikeDislikeView
                     # search_view
                     )
 
@@ -19,4 +20,5 @@ urlpatterns = [
     path('quiz-result/<str:pk>/', QuizResultView.as_view(), name='quiz_result'),
     path('taken-exam-detail/<str:pk>/', TakenExamDetail.as_view(), name='taken_exam_detail'),
     path('quick-quiz/<str:pk>/', QuickQuizView.as_view(), name='quick_quiz'),
+    path('like_dislike/', LikeDislikeView.as_view(), name='like_dislike'),
 ]

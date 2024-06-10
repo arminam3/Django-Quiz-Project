@@ -3,7 +3,7 @@
 
 
 {% block title %}
-	<title>{{theme}}</title>
+	<title>{{theme}}s</title>
 {% endblock title %}
 
 {% block head %}
@@ -112,10 +112,10 @@
 											<div class="dlab-img"  style="left: 0rem;" dir="rtl">
 												<img  src="{% static 'cus_image/gradu.png' %}" alt="">
 											</div>	
-											<div class="dlab-content farsi"  dir="rtl" style="padding-left: 7rem;padding-right:0rem;">
-												<h4 style="color: antiquewhite;" dir="rtl">در آزمون ها شرکت کنید و مطالب را بهتر به خاطر بسپارید</h4>
-												<p dir="rtl">شما هم می توانید با مشارکت در طرح سوالات و آزمون ها در این مسیر با ما همراه باشید</p>
-											</div>	
+											<div class="dlab-content dlab-content-cus farsi"  dir="rtl">
+												<h4 style="color: antiquewhite;text-align: justify;" dir="rtl">در آزمون ها شرکت کنید و مطالب را بهتر به خاطر بسپارید</h4>
+												<p dir="rtl" style="text-align: justify;">شما هم می توانید با مشارکت در طرح سوالات و آزمون ها در این مسیر با ما همراه باشید</p>
+											</div>
 											<div class="dlab-icon">
 												<img src="{% static 'images/vector/calpng.png' %}" alt="" class="cal-img">
 												<img src="{% static 'images/vector/book.png' %}" alt="" class="book-img">
@@ -177,26 +177,26 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xl-12 col-xxl-6">
+							<div class="col-xl-12 col-xxl-6 farsi" dir="rtl">
 								<div class="card score-active">
 									<div class="card-header border-0 flex-wrap">
-										<h4>Learning Activity</h4>
+										<h4>فعالیت شما</h4>
 										<ul class="d-flex">
-											<li>
+											<!-- <li>
 												<svg class="me-2" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 												<rect x="1.5" y="1.5" width="9" height="9" rx="4.5" fill="white" stroke="var(--primary)" stroke-width="3"/>
 												</svg>
 												Last Month
-											</li>
+											</li> -->
 											<li>
 												<svg class="me-2" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 												<rect x="1.5" y="1.5" width="9" height="9" rx="4.5" fill="white" stroke="var(--secondary)" stroke-width="3"/>
 												</svg>
-												Last Month
+												آمار تست های روزانه
 											</li>
 										</ul>
 									</div>
-									<div class="card-body pb-1 custome-tooltip style-1 py-0 ">
+									<div class="card-body pb-1 custome-tooltip style-1 py-0 " style="font-size: small;">
 										<div id="activity"></div>
 										<!-- <div id="activity"></div> -->
 									</div>
@@ -287,31 +287,32 @@
     <!--**********************************
         Scripts
     ***********************************-->
-		<!-- Required vendors -->
-		<script src="{% static './vendor/global/global.min.js' %}"></script>
-		<script src="{% static './vendor/chart.js/Chart.bundle.min.js' %}"></script>
-		<!-- <script src="{% static './vendor/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script> -->
-		
-		
-		<script>
-			var aa = [30, 50, 30, 60, 90, 70, 90]
-		</script>
-		<!-- Added JS -->
+	<!-- Required vendors -->
+	<script src="{% static './vendor/global/global.min.js' %}"></script>
+	<script src="{% static './vendor/chart.js/Chart.bundle.min.js' %}"></script>
+	<!-- <script src="{% static './vendor/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script> -->
 	
 	
-	<!-- Apex Chart -->
+
+	<!-- Added JS -->
+	
+	
+	<script>
+        var week_activity = '{{week_activity}}'
+    </script>
+	<!-- Apex Chart --> 
 	<script src="{% static './vendor/apexchart/apexchart.js' %}"></script>
 	
-	<script src="{% static './vendor/bootstrap-datetimepicker/js/moment.js' %}"></script>
-	<script src="{% static './vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+	<script src="{% static './vendor/bootstrap-datetimepicker/js/moment.js' %}" async></script>
+	<script src="{% static './vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}" async></script>
 	
 	<!-- Dashboard 1 -->
-	<script src="{% static './js/dashboard/dashboard-1.js' %}"></script>
+	<script src="{% static './js/dashboard/dashboard-1.js' %}" async></script>
 	
-	<script src="{% static './js/custom.js' %}"></script>
-	<script src="{% static './js/dlabnav-init.js' %}"></script>
-	<script src="{% static './js/demo.js' %}"></script>
-	<script src="{% static './js/styleSwitcher.js' %}"></script>
+	<script src="{% static './js/custom.js' %}" async></script>
+	<script src="{% static './js/dlabnav-init.js' %}" async></script>
+	<script src="{% static './js/demo.js' %}" async></script>
+	<script src="{% static './js/styleSwitcher.js' %}" async></script>
 	<!-- <script>
 		$(function () {
 			$('#datetimepicker').datetimepicker({
@@ -333,5 +334,9 @@
 	</script>  -->
 	<!--  Added JS -->
 
+	<script>
+		var week_activity = {{week_activity|safe}};
+		var day_names = {{day_names|safe}};
+	</script>
 
 {% endblock required_js %}

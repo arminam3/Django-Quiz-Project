@@ -1,0 +1,14 @@
+{
+    "platform": "django",
+    "app": "testino",
+    
+    "django":{
+        "pythonVersion": "3.10"
+    },
+    "disks": [
+        {
+            "name": "django-1",
+            "mountTo": "data"
+        }
+    ]
+}

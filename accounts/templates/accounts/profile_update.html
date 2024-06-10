@@ -12,13 +12,16 @@
     <link href="{% static './css/style.css' %}" rel="stylesheet">
     <link href="{% static './css/custumize.css' %}" rel="stylesheet">
 {% endblock head %}
-
+{% block page_header_name %}
+  ویرایش پروفایل
+{% endblock page_header_name %}
 {% block content %}
         <!--**********************************
             Content body start
         ***********************************-->
         <div class="content-body farsi" dir="rtl">
             <div class="container-fluid">
+                {% include "message.html" %}
                 <div class="row page-titles">
                     <ol class="breadcrumb" dir="rtl" style="text-align: right;">
                         <li class="breadcrumb-item active"><a href="">حساب کاربری</a></li>
@@ -80,9 +83,14 @@
                                                     </label>
                                                     <div class="col-lg-6">
                                                         <select class="default-select wide form-control" id="validationCustom05" name="gender" style="text-align: right;"> <!-- text align = right -->
-                                                            <option  data-display="{{user.profile.get_gender_display}}">انتخاب کنید</option>
-                                                            <option value="1">آقا</option>
-                                                            <option value="2">خانم</option>
+                                                            <option  data-display="">انتخاب کنید</option>
+                                                            <option value="1" {% if user.profile.gender == "1" %}
+                                                              selected
+                                                            {% endif %}>آقا</option>
+                                                            <option value="2" {% if user.profile.gender == "2" %}
+                                                              selected
+                                                            {% endif %}>خانم</option>
+                                                            <!-- <option value="2">خانم</option> -->
                                                         </select>
                                                         <div class="invalid-feedback">
                                                             
@@ -123,9 +131,13 @@
                                                     </label>
                                                     <div class="col-lg-6">
                                                         <select class="default-select wide form-control" id="validationCustom05" name="discipline" style="text-align: right;"> <!-- text align = right -->
-                                                            <option  data-display="{{user.profile.get_discipline_display}}">انتخاب کنید</option>
-                                                            <option value="1">پزشکی</option>
-                                                            <option value="2">پرستاری</option>
+                                                            <option  data-display="">انتخاب کنید</option>
+                                                            <option value="1" {% if user.profile.discipline == "1" %}
+                                                              selected
+                                                            {% endif %}>پزشکی</option>
+                                                            <option value="2" {% if user.profile.discipline == "2" %}
+                                                              selected
+                                                            {% endif %}>پرستاری</option>
                                                         </select>
                                                         <div class="invalid-feedback">
                                                             

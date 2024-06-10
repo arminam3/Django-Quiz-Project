@@ -14,7 +14,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ('term', 'phone_number', 'gender')
+        fields = ('discipline', 'gender', 'term')
 
 
 class CustomPasswordResetForm(forms.Form):

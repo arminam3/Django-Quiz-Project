@@ -28,4 +28,14 @@ def minus_index_int(my_list,index):
         return int(value)
     except IndexError:
         return False
+
+@register.filter
+def like_filter(like_dislike_list, bool):
+    if bool:
+        like_dislike_count = like_dislike_list.filter(like=True)
+    else:
+        like_dislike_count = like_dislike_list.filter(like=False)
+    
+    return like_dislike_count.count()
+
     

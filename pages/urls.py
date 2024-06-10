@@ -11,7 +11,7 @@ from .views import (
 
 
 urlpatterns = [
-    path('home/', HomeView.as_view(), name="home"),
+    path('', HomeView.as_view(), name="home"),
     path('theme-change/', theme_change_view, name="theme_change"),
     path('search-users/', search_users, name="search_users"),
     path('seen-notification/', SeenNotificationView.as_view(), name="seen_notification"),

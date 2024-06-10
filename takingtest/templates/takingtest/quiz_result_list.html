@@ -13,6 +13,10 @@
     <link href="{% static './css/custumize.css' %}" rel="stylesheet">
 {% endblock head %}
 
+{% block page_header_name %}
+  تاریخچه آزمون ها
+{% endblock %}
+
 {% block content %}
           <!--**********************************
             Content body start
@@ -46,13 +50,13 @@
 
                              " style="border-radius: inherit; border: 2px solid;">
                                 <div class="new-arrival-product">
-                                    <div class="new-arrivals-img-contnent rounded" style="height: 50%;">
+                                    <!-- <div class="new-arrivals-img-contnent rounded" style="height: 50%;">
                                         {% if quiz_result.quiz.image %}
-                                            <img class="img-fluid" src="{{quiz_result.quiz.image.url}}" alt="">
+                                            <img class="img-fluid" src="{{quiz_result.quiz.image.url}}" alt="" style="max-width: 50%;display: block;margin-left: auto;margin-right: auto;border-radius: 1em;">
                                         {% else %}    
-                                            <img class="img-fluid" src="{% static 'cus_image/default_quiz_image.jpg' %}" alt="" style="height: 50%;">
+                                            <img class="img-fluid" src="{% static 'cus_image/default_quiz_image.jpg' %}" alt="" style="max-width: 50%;display: block;margin-left: auto;margin-right: auto;border-radius: 1em;">
                                         {% endif %}
-                                    </div>
+                                    </div> -->
 
                             <!-- {% if quiz_result.quiz_result_score_percent >= 75 %}
                                     bg-secondary
@@ -87,6 +91,52 @@
                         </div>
                     </div>
                     {% endfor %}
+                    {% if  quiz_result_list.paginator.num_pages %}
+                    <nav>
+                        <ul class="pagination pagination-gutter pagination-primary no-bg">
+                            {% if quiz_result_list.has_previous %}
+                            <li class="page-item page-indicator">
+                                <a class="page-link active" href="{% url 'quiz_result_list' %}?page={{ quiz_result_list.previous_page_number }}">
+                                    <i class="la la-angle-right"></i></a>
+                                </li>
+                                {% endif %}
+                                {% if quiz_result_list.page_range.0 %}
+                                <li class="page-item bg-white  {% if quiz_result_list.current_page == 1 %}active{% endif %}" style="border-radius: 1em"><a class="page-link" href="{% url 'quiz_result_list' %}?page={{quiz_result_list.page_range.0}}">{{quiz_result_list.page_range.0|e2fnum}}</a>
+                                </li>
+                                {% endif %}
+                                {% if quiz_result_list.page_range.1 %}
+                                    <li class="page-item bg-white  {% if quiz_result_list.current_page == 2 %}active{% endif %}" style="border-radius: 1em"><a class="page-link" href="{% url 'quiz_result_list' %}?page={{quiz_result_list.page_range.1}}">{{quiz_result_list.page_range.1|e2fnum}}</a>
+                                    </li>
+                                {% endif %}
+                                {% if quiz_result_list.page_range|length >= 5 and quiz_result_list.current_page != 3 %}
+                                    <li class="page-item bg-white" style="border-radius: 1em"><a class="page-link" href="">..</a>
+                                    </li>
+                                {% endif %}
+                                {% if quiz_result_list.page_range|minus_index_int:1 > quiz_result_list.current_page and quiz_result_list.minus_last_2 >= 1 and quiz_result_list.current_page > 2 %}
+                                    <li class="page-item bg-white active" style="border-radius: 1em"><a class="page-link" href="{% url 'quiz_result_list' %}?page={{quiz_result_list.current_page}}">{{quiz_result_list.current_page|e2fnum}}</a>
+                                    </li>
+                                {% endif %}
+                                {% if quiz_result_list.minus_last_2 > 1 and quiz_result_list.current_page > 2 %}
+                                    <li class="page-item bg-white" style="border-radius: 1em"><a class="page-link" href="">..</a>
+                                    </li>
+                                {% endif %}
+                                    <!-- {% if quiz_list.page_range|minus_index:2  and quiz_list.page_range|length > 3 %}
+                                        <li class="page-item bg-white  {% if quiz_list.current_page == quiz_list.page_range|minus_index_int:2 %}active{% endif %}" style="border-radius: 1em"><a class="page-link" href="{% url 'quiz_result_list' %}?page={{quiz_list.page_range|minus_index:2}}">{{quiz_list.page_range|minus_index:2|e2fnum}}</a>
+                                        </li>
+                                    {% endif %} -->
+                                {% if quiz_result_list.page_range|minus_index:1  and quiz_result_list.page_range|length > 2 %}
+                                    <li class="page-item bg-white  {% if quiz_result_list.current_page == quiz_result_list.page_range|minus_index_int:1 %}active{% endif %}" style="border-radius: 1em"><a class="page-link" href="{% url 'quiz_result_list' %}?page={{quiz_result_list.page_range|minus_index:1}}">{{quiz_result_list.page_range|minus_index:1|e2fnum}}</a>
+                                    </li>
+                                {% endif %}
+                            {% if quiz_result_list.has_next %}
+                            <li class="page-item page-indicator">
+                                <a class="page-link" href="{% url 'quiz_result_list' %}?page={{ quiz_result_list.next_page_number }}">
+                                    <i class="la la-angle-left"></i></a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
                 </div>
             </div>
         </div>

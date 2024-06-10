@@ -21,6 +21,9 @@
 <link href="{% static './css/custumize.css' %}" rel="stylesheet">
 {% endblock head %}
 
+{% block page_header_name %}
+  ساخت آزمون
+{% endblock page_header_name %}
 
 {% block content %}
 <div class="content-body farsi">
@@ -142,4 +145,5 @@ $(document).ready(function(){
         },1500)
     });
 </script> 
+
 {% endblock required_js %}

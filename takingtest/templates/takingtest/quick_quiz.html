@@ -78,6 +78,14 @@
 											<div class="basic-form">
 													<div class="row">
 														<div class="col-xl-4 col-xxl-12 col-12">
+															{% if question.image %}
+															<div id="" class="" style="text-align: center;"> 
+																<a href="{{question.image.url}}" data-exthumbimage="images/big/img1.jpg" data-src="images/big/img1.jpg" class="col-lg-3 col-md-6 mb-4">
+																	<img class="image-container-zoom-cus" src="{{question.image.url}}" alt="" style="max-heght: 10em;margin-right:1.5em;border-radius: 1em;display: block; margin: 0 auto;"/>
+																	<p style="font-size: 0.7em;margin-right:2.5em;white-space: nowrap;">با کلیک بر تصویر بزرگنمایی کنید.</p>
+																</a>
+															</div>
+															{% endif %}
 															<div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info " >
 																<!-- <div class="row"> -->
 																	<!-- <input  type="text" value="" class="form-check-input form-check-input-cus" id="customRadioBox3" name="optradioCustom"> -->

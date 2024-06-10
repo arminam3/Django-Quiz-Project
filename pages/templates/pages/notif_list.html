@@ -20,10 +20,10 @@
           <!--**********************************
             Content body start
         ***********************************-->
-        <div class="content-body farsi" dir="rtl">
+        <div class="content-body farsi">
             <div class="container-fluid">
 				
-                <div class="row page-titles">
+                <div class="row page-titles"  dir="rtl">
                     <ol class="breadcrumb" dir="rtl" style="text-align: right;">
                         <li class="breadcrumb-item text-primary"><a href="" class="text-primary">{{user.get_full_name}}</a></li>
                         <li class=""><a href="">
@@ -33,7 +33,7 @@
                         </li>
                     </ol>
                 </div>
-                <div class="row" dir="rtl" style="text-align: right;float: right;">
+                <div class="row" dir="rtl" style="text-align: right;">                    
                     <div class="col-xl-4 col-xxl-12 col-lg-12">
                         <div class="card">
                             <div class="card-header border-0 pb-0">
@@ -42,18 +42,11 @@
                             <div class="card-body">
                                 <div id="DZ_W_TimeLine11" class="widget-timeline dlab-scroll style-1 height5000">
                                     <ul class="timeline">
-                                        {% for notification in notifications %}
+                                        {% for notification in notification_list %}
                                         <li>
-                                            <div class="timeline-badge 
-                                            {% if notification.is_read %}
-                                            success
-                                            {% else %}
-                                            primary
-                                            {% endif %}
-                                            
-                                            "></div>
-                                            <a class="timeline-panel text-muted" href="">
-                                                <hr>
+                                            <div id="seen-{{forloop.counter}}" class="timeline-badge {% if notification.is_read %}success{% else %}primary{% endif %}"></div>
+                                            <span class="timeline-panel text-muted">
+                                                <!-- <hr> -->
                                                 <span>{{notification.j_datetime_created}}</span>
                                                 <h6 class="mb-0 
                                                 {% if notification.is_read %}
@@ -61,13 +54,16 @@
                                                 {% else %}
                                                     text-primary
                                                 {% endif %}
-                                                ">{{forloop.counter|e2fnum}}) {{notification.title}}
+                                                ">{{forloop.counter|e2fnum}} ) {{notification.title}}
                                                     <!-- <strong class="text-primary">$500</strong>. -->
                                                 </h6>
                                                 {% if notification.text %}
 												<p class="mb-0">{{notification.text}}</p>
                                                 {% endif %}
-                                            </a>
+                                                <!-- {% if not notificaiton.is_read %}
+                                                    <button type="button" id="seen-{{forloop.counter}}" onclick="seen_notification_list('seen-{{forloop.counter}}', '{{notification.id}}')"  class="btn btn-outline-primary" style="border: none;" style="position: absolute;left: 2em;">دیدم</button>
+                                                {% endif %} -->
+                                            </span>
                                         </li>
                                         {% endfor %}
                                     </ul>
@@ -130,6 +126,18 @@
         function remove_user(name){
             var delete_user = document.getElementById(name);
             delete_user.remove();
+        }
+    </script>
+    <script>
+        function seen_notification_list(seen_id, id){
+            // var message = document.getElementById(seen_id)
+            // message.classList.remove('primary')
+            // message.classList.add('success')
+            var button = document.getElementById(seen_id)
+            button.remove()
+            fetch(`{% url 'seen_notification' %}?id=${id}`, {
+                method: 'GET'
+            })
         }
     </script>
 

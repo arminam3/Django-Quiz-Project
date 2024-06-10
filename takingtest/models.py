@@ -24,7 +24,7 @@ class QuizHistory(models.Model):
 class QuizResult(models.Model):
     exam_number = models.UUIDField(null=True)
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, blank=True)
-    user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True, related_name="quiz_result")
     datetime_created = models.DateTimeField(auto_now_add=True)
     score = models.PositiveIntegerField()
 
@@ -41,5 +41,14 @@ class QuizResult(models.Model):
         
         return user_result_percent
     
-    
-            
+
+class LikeDislike(models.Model):
+    user = models.ForeignKey(get_user_model(), related_name='user_like_dislike', on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, related_name='quiz_like_dislike', on_delete=models.CASCADE)
+    like = models.BooleanField()
+    datetime_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) :
+        return f'{self.user.username} | {self.quiz.name}'
+     
+          

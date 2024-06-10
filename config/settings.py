@@ -9,10 +9,19 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+from pathlib import Path
+
 import os.path
+# import dj_database_url
+from dotenv import load_dotenv
+load_dotenv()
+
+
 from pathlib import Path
 from django.urls import reverse, reverse_lazy
 from django.contrib.messages import constants as msg_cons
+
+
 
 # from django.contrib.auth.models import User
 
@@ -45,6 +54,7 @@ INSTALLED_APPS = [
     
     #third_apps
     'django_jalali',
+    'storages',
 
 
     #My_Apps
@@ -67,7 +77,7 @@ MIDDLEWARE = [
 
     # Custom Middleware
     'pages.custom_middleware.SetThemeMiddleware',
-    # 'accounts.custom_middleware.CheckHasProfileMiddleware'
+    # 'accounts.custom_middleware.NotActiveUserMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -98,7 +108,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    # 'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': 
+    {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
@@ -128,7 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -171,9 +183,48 @@ MESSAGE_TAGS = {
 # Email Backend
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Django-storages configuration
+# STORAGES = {
+#   "default": {
+#       "BACKEND": "storages.backends.s3.S3Storage",
+#   },
+#   "staticfiles": {
+#       "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+#   },
+# }
+
+# if DEBUG == True:
+#     from dotenv import load_dotenv
+#     load_dotenv()
+
+# # S3 Settings
+# LIARA_ENDPOINT    = os.getenv("LIARA_ENDPOINT")
+# LIARA_BUCKET_NAME = os.getenv("LIARA_BUCKET_NAME")
+# LIARA_ACCESS_KEY  = os.getenv("LIARA_ACCESS_KEY")
+# LIARA_SECRET_KEY  = os.getenv("LIARA_SECRET_KEY")
+# LIARA_ENDPOINT = 'https://storage.iran.liara.space'
+# LIARA_BUCKET_NAME = 'bucket14'
+# LIARA_ACCESS_KEY = 'b77od127bca0f528'
+# LIARA_SECRET_KEY = 'fc542a66-9244-4978-a056-c6815d8d3e2f'
+
+# S3 Settings Based on AWS (optional)
+# AWS_ACCESS_KEY_ID       = LIARA_ACCESS_KEY
+# AWS_SECRET_ACCESS_KEY   = LIARA_SECRET_KEY
+# AWS_STORAGE_BUCKET_NAME = LIARA_BUCKET_NAME
+# AWS_S3_ENDPOINT_URL     = LIARA_ENDPOINT
+# AWS_S3_REGION_NAME      = 'us-east-1'  
+
+# CASH
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION': os.path.join(BASE_DIR, 'cache'),
+#     }
+# }
+
+
+

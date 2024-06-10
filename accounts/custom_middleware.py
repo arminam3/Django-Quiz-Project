@@ -1,16 +1,17 @@
 from typing import Any
 from django.urls import reverse
+from django.http import HttpResponse
 # from django.shortcuts import redirect
 
 
-# class CheckHasProfileMiddleware:
+# class NotActiveUserMiddleware:
 #     def __init__(self, get_response):
 #         self.get_response = get_response
 
 #     def __call__(self, request):
-#         if not hasattr(request.user, 'profile'):
-#             return redirect('profile_create')
-        
+#         if request.user.is_authenticated:
+#             if request.user.is_active == False:
+#                 HttpResponse('اکانت شما غیر فعال است .')    
 #         response = self.get_response(request)
 #         return response
 

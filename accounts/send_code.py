@@ -30,29 +30,29 @@ def send_code(request, phone_number, user_code=0):
         if not user_code:
             random_int = random.randint(10000, 99999)
 
-            # api_key = "266067-f2c94818b0ec407f9e95a6a91e35e607"
-            # text = f"کد ورود شما : {random_int}"
-            # sender = "50004075003351"
-            # recipient = f"09045250913"
-            # # print(random_int)"
+            api_key = "266067-f2c94818b0ec407f9e95a6a91e35e607"
+            text = f"کد ورود شما : {random_int}"
+            sender = "50004075003351"
+            recipient = f"09045250913"
+            # print(random_int)"
 
-            # url = f"https://api.sms-webservice.com/api/V3/Send?ApiKey={api_key}&Text={text}&Sender={sender}&Recipients={recipient}"
+            url = f"https://api.sms-webservice.com/api/V3/Send?ApiKey={api_key}&Text={text}&Sender={sender}&Recipients={recipient}"
 
-            # payload = {}
-            # headers = {}
+            payload = {}
+            headers = {}
 
-            # try:
-            #     response = requests.get(url, headers=headers, data=payload)
-            #     response.raise_for_status()
-            #     print(response.text)
+            try:
+                response = requests.get(url, headers=headers, data=payload)
+                response.raise_for_status()
+                print(response.text)
 
-            # except requests.exceptions.HTTPError as err:
-            #     messages.error(
-            #         request,
-            #         f"<strong>خطا !</strong>متاسفانه کد ارسال نشد :"
-            #     )
-            #     print(err)
-                # return redirect('check_code')
+            except requests.exceptions.HTTPError as err:
+                messages.error(
+                    request,
+                    f"<strong>خطا !</strong>متاسفانه کد ارسال نشد :"
+                )
+                print(err)
+                return redirect('check_code')
 
             verificatio_code = VerificationCode.objects.create(
                 user=user,

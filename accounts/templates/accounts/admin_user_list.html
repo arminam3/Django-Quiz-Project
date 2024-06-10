@@ -1,0 +1,297 @@
+{% extends "_base.html" %}
+
+{% load static %}
+{% load my_tags %}
+	
+	<!-- PAGE TITLE HERE -->
+	{% block title %}
+      <title>لیست کاربران</title>
+    {% endblock title %}
+	
+    {% block head %}
+        <!-- FAVICONS ICON -->
+        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+        <!-- Datatable -->
+        <link href='{% static "./vendor/datatables/css/jquery.dataTables.min.css" %}' rel="stylesheet">
+        <!-- Custom Stylesheet -->
+        <link href='{% static "./vendor/jquery-nice-select/css/nice-select.css" %}' rel="stylesheet">
+        <link href='{% static "./css/style.css" %}' rel="stylesheet">
+        <link href="{% static './css/custumize.css' %}" rel="stylesheet">
+
+    {% endblock head %}
+
+
+    {% block page_header_name %}
+        مدیریت کاربران 
+    {% endblock page_header_name %}
+    <!--**********************************
+        Main wrapper start
+        ***********************************-->
+        <div id="main-wrapper">
+            {% block content %}
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body" dir="rtl">
+            <div class="container-fluid">
+                    {% include "message.html" %}
+                <div class="row page-titles farsi">
+                    <ol class="breadcrumb" dir="rtl" style="text-align: right;">
+                        <li class="breadcrumb-item active"><a href="">مدیریت سایت</a></li>
+                        <li class=""><a href="">
+                            <span class="text-primary">&nbsp; / </span>
+                             کاربران
+                             </a></li>
+                        <!-- <li class="breadcrumb-item"><a href=""></a></li> -->
+                        <!-- <li class=""><a href="">طراح سوالات : {{quiz.quiz_maker}}</a></li> -->
+                    </ol>
+                </div>
+                <!-- row -->
+
+                <div class="row">
+					<div class="col-12 farsi">
+                        <div class="card farsi">
+                            <div class="card-header farsi" dir="rtl">
+                                <h4 class="card-title">مدیریت کاربران</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive" dir="rtl">
+                                    <table dir="rtl" id="example3"  class="display" style="min-width: 845px;float: right;">
+                                        <thead dir="rtl">
+                                            <tr>
+                                                <!-- <th></th> -->
+                                                <th style="text-align: center;">شماره</th>
+                                                <th style="text-align: center;">نام کاربری</th>
+                                                <th style="text-align: center;">نام و نام خانوادگی</th>
+                                                <th style="text-align: center;">رشته</th>
+                                                <th style="text-align: center;">ترم</th>
+                                                <th style="text-align: center;">تاریخ عضویت</th>
+                                                <th style="text-align: center;">تعداد آزمون ها</th>
+                                                <th style="text-align: center;">نقش </th>
+                                                <th style="text-align: center;">ویرایش</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                            {% for user_obj in user_list %}
+                                                <tr>
+                                                    <td style="text-align: center;" >{{forloop.counter}}</td>
+                                                    <td style="text-align: center;" >{{ user_obj.username }}</td>
+                                                    <td style="text-align: center;"><b>{{ user_obj.get_full_name }}</b></td>
+                                                    <td style="text-align: center;">{{ user_obj.profile.get_discipline_display }}</td>
+                                                    <td style="text-align: center;">{{user_obj.profile.term}}</td>
+                                                    <td style="text-align: center;"><a href="javascript:void(0);"><strong dir="rtl">{{ user_obj.profile.j_datetime_joined }}</strong></a></td>
+                                                    <td style="text-align: center;"><a href="javascript:void(0);"><strong dir="rtl">{{ user_obj.quiz_result.all|length|e2fnum }}</strong></a></td>
+                                                    {% if user_obj.is_superuser %}
+                                                        <td style="text-align: center;"><span style="width: 10em;" class="badge badge-primary">مدیر</span></td>
+                                                    {% elif user_obj.is_staff %}
+                                                        <td style="text-align: center;"><span style="width: 10em;" class="badge  badge-info">ادمین</span></td>
+                                                    {% elif user_obj.profile.is_quiz_maker %}
+                                                        <td style="text-align: center;"><span style="width: 10em;" class="badge  badge-warning">طراح سوال</span></td>
+                                                    {% elif not user_obj.is_active %}
+                                                        <td style="text-align: center;"><span style="width: 10em;" class="badge  badge-dark">غیر فعال</span></td>
+                                                    {% else %}
+                                                        <td style="text-align: center;"><span style="width: 10em;" class="badge  badge-success">دانشجو</span></td>
+                                                    {% endif %}	
+                                                    {% if not user_obj.is_superuser %}
+                                                    <td>
+                                                        <div class="dropdown ms-auto text-center">
+                                                            <div class="btn-link" data-bs-toggle="dropdown">
+                                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+                                                            </div>
+                                                            <div class="dropdown-menu dropdown-menu-end">
+                                                                {% if user_obj.is_active %}
+                                                                    <a class="dropdown-item text-end" href="#" onclick="changeLevel('{{user_obj.id}}', 'deactivate')" >غیر فعال کردن</a>
+                                                                {% endif %}
+                                                                {% if not user_obj.is_active %}
+                                                                    <a class="dropdown-item text-end" href="#" onclick="changeLevel('{{user_obj.id}}', 'activate')">فعال کردن</a>
+                                                                {% endif %}
+                                                                {% if user_obj.profile.is_quiz_maker %}
+                                                                    <a class="dropdown-item text-end" href="#" onclick="changeLevel('{{user_obj.id}}', 'BeStudent')">تبدیل به دانشجو</a>
+                                                                {% endif %}
+                                                                {% if not user_obj.profile.is_quiz_maker %}
+                                                                    {% if not is_staff %}
+                                                                        <a class="dropdown-item text-end" href="#" onclick="changeLevel('{{user_obj.id}}', 'BeQuizMaker')">تبدیل به طراح سوال</a>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                                {% if not user_obj.is_staff %}
+                                                                    {% if user.is_superuser %}
+                                                                        <a class="dropdown-item text-end" href="#" onclick="changeLevel('{{user_obj.id}}', 'BeStaff')">تبدیل به ادمین</a>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    {% else %}						
+                                                    <td class="text-center">----</td>				
+                                                    {% endif %}
+                                                </tr>
+
+
+                                            {% endfor %}
+
+												</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Patient</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example5" class="display" style="min-width: 845px">
+                                        <thead>
+                                            <tr>
+                                                <th>
+													<div class="form-check custom-checkbox ms-2">
+														<input type="checkbox" class="form-check-input" id="checkAll" required="">
+														<label class="form-check-label" for="checkAll"></label>
+													</div>
+												</th>
+                                                <th>Patient ID</th>
+                                                <th>Date Check in</th>
+                                                <th>Patient Name</th>
+                                                <th>Doctor Assgined</th>
+                                                <th>Disease</th>
+                                                <th>Status</th>
+                                                <th>Room no</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+												<td>
+													<div class="form-check custom-checkbox ms-2">
+														<input type="checkbox" class="form-check-input" id="customCheckBox16" required="">
+														<label class="form-check-label" for="customCheckBox16"></label>
+													</div>
+												</td>
+                                                <td>#P-00015</td>
+                                                <td>28/02/2020, 12:42 AM</td>
+												<td>Sonya Frost</td>
+												<td>Dr. Rhona</td>
+                                                <td>Cold & Flu</td>
+                                                <td>
+													<span class="badge light badge-danger">
+														<i class="fa fa-circle text-danger me-1"></i>
+														New Patient
+													</span>
+												</td>
+                                                <td>AB-015</td>
+                                                <td>
+													<div class="dropdown ms-auto text-end">
+														<div class="btn-link" data-bs-toggle="dropdown">
+															<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+														</div>
+														<div class="dropdown-menu dropdown-menu-end">
+															<a class="dropdown-item" href="#">Accept Patient</a>
+															<a class="dropdown-item" href="#">Reject Order</a>
+															<a class="dropdown-item" href="#">View Details</a>
+														</div>
+													</div>
+												</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+        <form action="{% url 'quiz_delete' %}" method="POST">
+            {% csrf_token %}
+            <div class="col-xl-2 col-lg-4">
+                <div class="card" dir="rtl">
+                    <!-- <button class="btn btn-danger" type="submit" name="button-name" value="delete_question">
+                        حذف سوال 
+                    </button> -->
+                    <button type="button" class="btn btn-primary farsi" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">حذف سوال</button>
+                        <!-- Modal -->
+                        <div class="modal fade farsi" id="exampleModalCenter">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content" >
+                                    <div class="modal-header" dir="rtl">
+                                        <h5 class="modal-title"> اخطار</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" dir="rtl" style="margin-right: -4.5em;">
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>آیا از حذف  سوال اطمینان دارید ؟ </p>
+                                    </div>
+                                    <div class="modal-footer farsi">
+                                        <button type="button" class="btn btn-dark light" data-bs-dismiss="modal">لغو</button>
+                                        <button type="submit" class="btn btn-primary" name="delete_question" value="" id="delete"> حذف </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>																						
+                        <!-- <button type="button" class="btn btn-danger btn sweet-confirm sss">حذف سوال</button> -->
+                    
+                    </div>																																																																																				
+            </div>
+        </form>
+
+        {% endblock content %}
+
+        
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+{% block required_js %}
+      <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="{% static './vendor/global/global.min.js' %}"></script>
+    <script src="{% static './vendor/chart.js/Chart.bundle.min.js' %}"></script>
+	<!-- Apex Chart -->
+	<script src="{% static './vendor/apexchart/apexchart.js' %}"></script>
+	
+    <!-- Datatable -->
+    <!-- <script src="{% static './vendor/datatables/js/jquery.dataTables.min.js' %}"></script> -->
+    <script src="{% static './custom/vendor/jquery.dataTables-cus.min.js' %}"></script>
+    <script src="{% static './custom/js/datatables-cus.init.js' %}"></script>
+
+	<script src="{% static 'vendor/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
+
+    <script src="{% static './js/custom.js' %}"></script>
+	<script src="{% static './js/dlabnav-init.js' %}"></script>
+	<script src="{% static './js/demo.js' %}"></script>
+	<!-- <script src="{% static './js/layout.js' %}"></script> -->
+    <script src="{% static './js/styleSwitcher.js' %}"></script>
+    <script>
+        function changeLevel(user_id, action){
+            fetch(`{% url 'change_user_level' %}?user_id=${user_id}&action=${action}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    window.location.href ='{% url "user_list" %}'
+                } 
+                if (data.success) {
+                    window.location.href ='{% url "user_list" %}'
+                } 
+            })
+            .catch(error => {
+                // Handle errors here
+            });
+    }
+    </script>
+
+{% endblock required_js %}
