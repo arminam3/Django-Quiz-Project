@@ -2,7 +2,7 @@ from typing import Any
 
 
 class SetThemeMiddleware:
-    def __init__(self, get_response) -> None:
+    def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):

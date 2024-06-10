@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView, UpdateView, ListView, DetailView, CreateView
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404,redirect
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -88,3 +88,24 @@ def search_users(request):
     users_list = list(users.values('username'))
     print('--0--')
     return JsonResponse(users_list, safe=False)
+
+
+class SeenNotificationView(TemplateView):
+    model = Notification
+    fields = ('is_read') 
+    template_name = 'pages/home.html'
+
+    def get(self, request, *args, **kwargs):
+        notification = get_object_or_404(Notification, id=request.GET.get('id'))
+        notification.is_read = True
+        notification.save()
+        return super().get(request, *args, **kwargs)
+    
+class NotificationListView(ListView):
+    model = Notification
+    context_object_name = "notifications"
+    template_name = "pages/notif_list.html"
+
+    def get_queryset(self):
+        notifications = Notification.objects.filter(receptor=self.request.user).order_by('is_read')
+        return notifications

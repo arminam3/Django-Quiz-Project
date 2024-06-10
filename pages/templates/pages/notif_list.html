@@ -1,0 +1,136 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load my_tags %}
+
+{% block head %}
+  	<!-- FAVICONS ICON -->
+	<link rel="shortcut icon" type="image/png" href="images/favicon.png" />
+    <!-- <link rel="stylesheet" href="{% static './vendor/select2/css/select2.min.css' %}"> -->
+	<!-- <link href="{% static './vendor/jquery-nice-select/css/nice-select.css' %}" rel="stylesheet"> -->
+    <link href="{% static './css/style.css' %}" rel="stylesheet">
+    <link href="{% static './css/custumize.css' %}" rel="stylesheet">
+
+{% endblock head %}
+
+{% block title %}
+  <title>ارسال پیام</title>
+{% endblock title %}
+
+{% block content %}
+          <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body farsi" dir="rtl">
+            <div class="container-fluid">
+				
+                <div class="row page-titles">
+                    <ol class="breadcrumb" dir="rtl" style="text-align: right;">
+                        <li class="breadcrumb-item text-primary"><a href="" class="text-primary">{{user.get_full_name}}</a></li>
+                        <li class=""><a href="">
+                            <span class="text-primary">&nbsp; / </span>
+                              پیام ها
+                             </a>
+                        </li>
+                    </ol>
+                </div>
+                <div class="row" dir="rtl" style="text-align: right;float: right;">
+                    <div class="col-xl-4 col-xxl-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-header border-0 pb-0">
+                                <h4 class="card-title">لیست پیام ها</h4>
+                            </div>
+                            <div class="card-body">
+                                <div id="DZ_W_TimeLine11" class="widget-timeline dlab-scroll style-1 height5000">
+                                    <ul class="timeline">
+                                        {% for notification in notifications %}
+                                        <li>
+                                            <div class="timeline-badge 
+                                            {% if notification.is_read %}
+                                            success
+                                            {% else %}
+                                            primary
+                                            {% endif %}
+                                            
+                                            "></div>
+                                            <a class="timeline-panel text-muted" href="">
+                                                <hr>
+                                                <span>{{notification.j_datetime_created}}</span>
+                                                <h6 class="mb-0 
+                                                {% if notification.is_read %}
+                                                    text-success
+                                                {% else %}
+                                                    text-primary
+                                                {% endif %}
+                                                ">{{forloop.counter|e2fnum}}) {{notification.title}}
+                                                    <!-- <strong class="text-primary">$500</strong>. -->
+                                                </h6>
+                                                {% if notification.text %}
+												<p class="mb-0">{{notification.text}}</p>
+                                                {% endif %}
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+{% endblock content %}
+
+{% block required_js %}
+    <script src="{% static './vendor/global/global.min.js' %}"></script>
+    <script src="{% static 'vendor/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
+
+    <script src="{% static './js/custom.js' %}"></script>
+    <script src="{% static './js/dlabnav-init.js' %}"></script>
+    <script src="{% static './js/demo.js' %}"></script>
+    <script src="{% static './js/styleSwitcher.js' %}"></script>
+    <script>
+        
+        const searchInput = document.getElementById('search_user');
+        const userList = document.getElementById('userList');
+        const receptor = document.getElementById('receptor');
+        var n = 1
+        searchInput.addEventListener('input', function() {
+            fetch(`/search-users/?query=${searchInput.value}`)
+                .then(response => response.json())
+                .then(data => {
+                    userList.innerHTML = '';
+                    data.forEach(user => {
+                        const div = document.createElement('div');
+                        div.classList.add('btn', 'table-primary', 'col-lg-2');
+                        div.style.margin = '1em';
+                        div.setAttribute('type', `button`);
+                        div.setAttribute('onclick', `add_user('${user.username}')`);    
+                        div.innerHTML = user.username;
+                        userList.appendChild(div);
+                    });
+                });
+            });
+
+        function add_user(username) {
+            const receptor_div = document.createElement('input');
+            receptor_div.classList.add('btn', 'table-success', 'col-lg-2');
+            receptor_div.setAttribute('id', `user-${n}`);
+            receptor_div.setAttribute('name', `user-${n}`);
+            receptor_div.setAttribute('type', `input`);
+            receptor_div.setAttribute('value', username);
+            receptor_div.setAttribute('onclick', `remove_user('user-${n}')`);
+            receptor_div.style.margin = '1em';
+            receptor_div.innerHTML = username;
+            receptor.appendChild(receptor_div);
+            n++
+        }
+        function remove_user(name){
+            var delete_user = document.getElementById(name);
+            delete_user.remove();
+        }
+    </script>
+
+{% endblock required_js %}

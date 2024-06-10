@@ -114,7 +114,6 @@
                                             <div class="row" >
                                             <div class="col-4"></div>
                                             <div class="col-4">
-    
                                                 <button class="btn btn-info" style="vertical-align: bottom;position: absolute;margin-bottom: 0em;margin-top: 2em;bottom: 2em;" onclick="colorChangeBtn('{{question.id}}','{{question.answer}}')">مشاهده پاسخ</button>
                                             </div>
                                             <div class="col-4">
@@ -122,8 +121,7 @@
                                             </div>
                                             </div>
                                         <!-- Accordination - START  --> 
-                                        {% if question.explanation %}
-                                          
+                                        {% if question.explanation.strip %}
                                          <div class="col-xl-12">                                                
                                             <div class="accordion accordion-with-icon farsi" id="accordion-">
                                                 <div class="accordion-item">

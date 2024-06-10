@@ -1,6 +1,3 @@
-
-
-
 from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render, redirect
