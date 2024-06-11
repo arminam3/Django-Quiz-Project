@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from exam.models import Quiz, Question
 
@@ -15,7 +16,7 @@ class QuizHistory(models.Model):
     question = models.ForeignKey(Question, on_delete=models.SET_NULL, blank=True, null=True, related_name="history")
     user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, blank=True, null=True, related_name="history")
     user_answer = models.CharField(choices=CHOICES, max_length=1)
-    datetime_created = models.DateTimeField(auto_now_add=True)
+    datetime_created = models.DateTimeField(default=timezone.now)
     datetime_edited = models.DateTimeField(auto_now=True)
 
     def __str__(self):

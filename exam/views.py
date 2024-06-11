@@ -153,6 +153,14 @@ class QuestionUpdateView(IsStaffOrQuizMakerUserMixin, UpdateView):
                 os.remove(obj.image.path)
             obj.image = None
             obj.save()
+
+        if self.request.FILES.get('image'):
+            if self.request.FILES.get('image').size > 200 * 1024:
+                messages.error(
+                    request,
+                    f"<strong>حجم عکس باید کمتر از 200 kb باشد.</strong>"
+                )
+                return redirect(reverse('question_update', args=[self.get_object().id]))
         
         # delete question
         if posted_data.get('button-name') == 'delete_question':
@@ -214,6 +222,11 @@ def question_delete_view(request, pk):
     # def get_queryset(self):
     #     user = self.request.user
     #     return Question.objects.filter(question_maker=user, is_deleted=False)
+# def validate_image_size(value):
+    # limit_size = 200
+    # print('---d-d-d-d--d-d-dd-----')
+    # if value.size > limit_size * 1024:
+    #     raise ValidationError('حجم عکس نباید بیشتر از 200kb باشد.')
 
 
 class QuizCreateView(IsStaffOrQuizMakerUserMixin, CreateView):
@@ -226,6 +239,13 @@ class QuizCreateView(IsStaffOrQuizMakerUserMixin, CreateView):
         quiz_time = timedelta(minutes=int(posted_data.get('quiz_time')))
         quiz_image = self.request.FILES.get('quiz_image')
         user = self.request.user
+        if quiz_image:
+            if quiz_image.size > 200 * 1024:
+                messages.error(
+                    request,
+                    f"<strong>حجم عکس باید کمتر از 200 kb باشد.</strong>"
+                )
+                return redirect('quiz_create')
         obj = Quiz.objects.create(
             name=posted_data['quiz_name'],
             lesson=Lesson.objects.get(pk=posted_data['lesson_id']),
@@ -269,41 +289,42 @@ class QuizQuestionCreateView(LoginRequiredMixin, CreateView):
         quiz = Quiz.objects.get(pk=self.kwargs['pk'])
 
         num = 0
+        big_image = ''
         while(posted_data.get(f'text-{num}')):
             ques_val = multi_question_maker(num)
-            # quiz_question_create_form = QuizQuestionCreateForm()
-
-            # quiz_question_create_form.text = posted_data.get(ques_val['text'])
-            # quiz_question_create_form.choice_1 = posted_data.get(ques_val['choice_1'])
-            # quiz_question_create_form.choice_2 = posted_data.get(ques_val['choice_2'])
-            # quiz_question_create_form.choice_3 = posted_data.get(ques_val['choice_3'])
-            # quiz_question_create_form.choice_4 = posted_data.get(ques_val['choice_4'])
-            # quiz_question_create_form.answer = posted_data.get(ques_val['answer'])
-            # quiz_question_create_form.image = posted_data.get(ques_val['image'])
-            # quiz_question_create_form.explanation = posted_data.get(ques_val['explanation'])
-
-            # chech for no problems in submited form
-            # if quiz_question_create_form.is_valid():
-            new_question = Question.objects.create(
-                text=posted_data.get(ques_val['text']),
-                choice_1=posted_data.get(ques_val['choice_1']),
-                choice_2=posted_data.get(ques_val['choice_2']),
-                choice_3=posted_data.get(ques_val['choice_3']),
-                choice_4=posted_data.get(ques_val['choice_4']),
-                answer=posted_data.get(ques_val['answer']),
-                image=posted_file.get(ques_val['image']),
-                explanation=posted_data.get(ques_val['explanation']),
-                question_maker = user,
-
-                                    )
+            if (posted_file.get(ques_val['image'])) and posted_file.get(ques_val['image']).size > 200 * 1024:
+                # if :
+                big_image += (f'{num+1} ,')
+                    # messages.error(
+                    #     request,
+                    #     f"<strong>حجم عکس باید کمتر از 200 kb باشد.</strong>"
+                    # )
+                    # return redirect('quiz_create')
+            else:
+                new_question = Question.objects.create(
+                    text=posted_data.get(ques_val['text']),
+                    choice_1=posted_data.get(ques_val['choice_1']),
+                    choice_2=posted_data.get(ques_val['choice_2']),
+                    choice_3=posted_data.get(ques_val['choice_3']),
+                    choice_4=posted_data.get(ques_val['choice_4']),
+                    answer=posted_data.get(ques_val['answer']),
+                    image=posted_file.get(ques_val['image']),
+                    explanation=posted_data.get(ques_val['explanation']),
+                    question_maker = user,
+                    )
+                    
+                quiz.questions.add(new_question)
                 
-            quiz.questions.add(new_question)
-            
             num += 1
-            quiz_question_count = quiz.questions.count()
-            messages.success(
-            self.request,
-            f"<strong>  آزمون '{quiz.name}' با {quiz_question_count} .سوال در سیستم ثبت شد</strong>"
+        quiz_question_count = quiz.questions.count()
+        messages.success(
+        self.request,
+        f"<strong>  آزمون '{quiz.name}' با {quiz_question_count} .سوال در سیستم ثبت شد</strong>"
+            )
+        if big_image:
+            messages.error(
+                request,
+                f"<strong>سوال {big_image[:-1:]} به دلیل حجم بالای عکس (بالای 200 kb) ذخیره نشدند.</strong>"
             )
         return redirect(reverse('quiz_question_update',args=[self.kwargs['pk']]))
     
@@ -378,10 +399,17 @@ class QuizUpdateView(IsStaffOrQuizMakerUserMixin, UpdateView):
     
     def form_valid(self, form: BaseModelForm):
         quiz = self.get_object()
+        new_image = self.request.FILES.get('image')
         posted_data = self.request.POST
         form.instance.time = timedelta(minutes=int(posted_data.get('time')))
-        if self.request.FILES.get('image'):
-                form.instance.image = self.request.FILES.get('image')
+        if new_image:
+            if new_image.size > 200 * 1024:
+                messages.error(
+                    self.request,
+                    f"<strong>حجم عکس باید کمتر از 200 kb باشد.</strong>"
+                )
+                return redirect(reverse('quiz_update', args=[quiz.id]))
+            form.instance.image = self.request.FILES.get('image')
         elif quiz.image:
             form.instance.image = quiz.image
         return super().form_valid(form)

@@ -30,6 +30,7 @@
 {% block content %}
 <div class="content-body farsi">
     <div class="container-fluid " dir="rtl">
+        {% include "message.html" %}
         <div class="row">
             <div class="col-xl-12 col-lg-12 "  style="font-size: medium ;">
                 <div class="card">
@@ -54,9 +55,15 @@
                                         <label class="col-form-label col-sm-2 pt-0 farsi">تصویر جدید  :</label>
                                         <div class="col-sm-9" style="margin-bottom: 0.5em;">
                                             <div class="input-group custom_file_input">
+                                                {% if quiz.image %}
                                                 <div class="form-file">
                                                     <input type="file" class="form-file-input form-control" name="image" value="{{quiz.image.url}}">
                                                 </div>
+                                                {% else %}
+                                                <div class="form-file">
+                                                    <input type="file" class="form-file-input form-control" name="image">
+                                                    </div>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <label class="col-form-label col-sm-2 pt-0 farsi">تصویر فعلی  :</label>
