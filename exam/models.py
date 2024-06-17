@@ -66,6 +66,11 @@ class Lesson(models.Model):
 
     def __str__(self) -> str:        
         return f"{self.name}  |  {self.master}"
+    
+    def quiz_count(self):
+        lesson_quiz_count = Quiz.objects.filter(lesson=self).count()
+        return lesson_quiz_count
+
 
 
 class Quiz(models.Model):

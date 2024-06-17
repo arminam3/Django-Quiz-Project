@@ -207,9 +207,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # LIARA_ACCESS_KEY  = os.getenv("LIARA_ACCESS_KEY")
 # LIARA_SECRET_KEY  = os.getenv("LIARA_SECRET_KEY")
 # LIARA_ENDPOINT = 'https://storage.iran.liara.space'
-# LIARA_BUCKET_NAME = 'bucket14'
-# LIARA_ACCESS_KEY = 'b77od127bca0f528'
-# LIARA_SECRET_KEY = 'fc542a66-9244-4978-a056-c6815d8d3e2f'
+# LIARA_BUCKET_NAME = 'testy-bucket'
+# LIARA_ACCESS_KEY = 'h3scat6u25qv396g'
+# LIARA_SECRET_KEY = '7a2f7b65-811f-4b81-972f-c5e791e01633'
 
 # S3 Settings Based on AWS (optional)
 # AWS_ACCESS_KEY_ID       = LIARA_ACCESS_KEY

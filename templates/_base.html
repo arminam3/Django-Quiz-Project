@@ -388,8 +388,9 @@
 						<span class="nav-text">مدیریت سایت</span>
 					</a>
 					<ul aria-expanded="false">
-						<li><a href="{% url 'quiz_list' %}">لیست آزمون ها</a></li>
-						<li><a href="{% url 'user_list' %}">لیست کاربران</a></li>
+						<li><a href="{% url 'quiz_list' %}">آزمون ها</a></li>
+						<li><a href="{% url 'user_list' %}"> کاربران</a></li>
+						<li><a href="{% url 'lesson_list' %}">دروس </a></li>
 					</ul>
 				</li>
 				{% endif %}
@@ -514,7 +515,7 @@
 			setTimeout(function(){
 				dlabSettingsOptions.version = "{{request.session.theme}}"
 				new dlabSettings(dlabSettingsOptions);
-			},3000)
+			},1500)
 		});
 	</script>  
 	<!--  Added JS -->
@@ -536,34 +537,34 @@
 			.then(response => {
 				if (body.getAttribute('data-theme-version') === 'light') {
 
-					body.setAttribute('data-theme-version', 'dark');
+					// body.setAttribute('data-theme-version', 'dark');
 					theme_icon.classList.remove("fa-moon")
 					theme_icon.classList.add("fa-sun")
-					$(document).ready(function(){
-					$(".booking-calender .fa.fa-clock-o").removeClass(this);
-					$(".booking-calender .fa.fa-clock-o").addClass('fa-clock');
-					});
+					// $(document).ready(function(){
+					// $(".booking-calender .fa.fa-clock-o").removeClass(this);
+					// $(".booking-calender .fa.fa-clock-o").addClass('fa-clock');
+					// });
 					
 					jQuery(document).ready(function(){
 						setTimeout(function(){
 							dlabSettingsOptions.version = 'dark'
 							new dlabSettings(dlabSettingsOptions);
-						},3000)
+						},1)
 					});
 				} else {
-					body.setAttribute('data-theme-version', 'light');
+					// body.setAttribute('data-theme-version', 'light');
 					theme_icon.classList.remove("fa-sun")
 					theme_icon.classList.add("fa-moon")
-					$(document).ready(function(){
-					$(".booking-calender .fa.fa-clock-o").removeClass(this);
-					$(".booking-calender .fa.fa-clock-o").addClass('fa-clock');
-					});
+					// $(document).ready(function(){
+					// $(".booking-calender .fa.fa-clock-o").removeClass(this);
+					// $(".booking-calender .fa.fa-clock-o").addClass('fa-clock');
+					// });
 					
 					jQuery(document).ready(function(){
 						setTimeout(function(){
 							dlabSettingsOptions.version = "light"
 							new dlabSettings(dlabSettingsOptions);
-						},3000)
+						},1)
 					});
 				}
 				})

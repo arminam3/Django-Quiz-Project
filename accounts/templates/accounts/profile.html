@@ -83,27 +83,6 @@
                 </div>
                 <div class="col-xl-8 col-xxl-7 col-lg-12 ">
                     <div class="row">
-                        <div class="col-xl-6 col-lg-6 col-sm-6 text-center" dir="auto">
-                            <div class="card profile-widget">
-                                <div class="card-body">
-                                    <div class="widget-courses align-items-center d-flex justify-content-between style-1 flex-wrap">
-                                        <div class="d-flex">
-                                            <svg style="font-size: larger;" xmlns="http://www.w3.org/2000/svg" class="text-danger" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path> <polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                                            <form action="{% url 'logout' %}" method="POST">
-                                                {% csrf_token %}	
-                                            <button type="submit" href="{% url 'logout' %}" style="background-color: unset;border:none">
-                                            <div class="ms-4">
-                                                <h4 class="">&nbsp;خروج </h4>
-                                                <span style="font-size: small;">بر روی فلش کلیک کنید</span>
-                                            </div>	
-                                        </div>
-                                            <i class="las la-angle-left text-primary "></i>
-                                        </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-xl-6 col-lg-6 col-sm-6">
                             <div class="card profile-widget">
                                 <div class="card-body">
@@ -115,7 +94,7 @@
                                                 <!-- <img src="{% static 'images/svg/clock-1.svg' %}"  alt=""> -->
                                                 <div class="ms-4">
                                                     <h5>آزمون های من</h5 style="font-size: large;">
-                                                    <span style="font-size: small;">کلیک کنید</span>
+                                                    <span class="text-secondary" style="font-size: small;">کلیک کنید</span>
                                                 </div>	
                                             </div>	
                                             <a href="{% url 'quiz_result_list' %}"><i class="las la-angle-left text-secondary"></i></a>
@@ -124,6 +103,28 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xl-6 col-lg-6 col-sm-6 text-center" dir="auto">
+                            <div class="card profile-widget">
+                                <div class="card-body">
+                                    <div class="widget-courses align-items-center d-flex justify-content-between style-1 flex-wrap">
+                                        <div class="d-flex">
+                                            <svg style="font-size: larger;" xmlns="http://www.w3.org/2000/svg" class="text-danger" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path> <polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                                            <form action="{% url 'logout' %}" method="POST">
+                                                {% csrf_token %}	
+                                            <button type="submit" href="{% url 'logout' %}" style="background-color: unset;border:none">
+                                            <div class="ms-4">
+                                                <h4 class="">&nbsp;خروج </h4>
+                                                <span class="text-primary" style="font-size: small;">بر روی فلش کلیک کنید</span>
+                                            </div>	
+                                        </div>
+                                            <i class="las la-angle-left text-primary "></i>
+                                        </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="widget-heading d-flex justify-content-between align-items-center">
                             <h3 class="m-0">آمار حساب کاربری شما</h3>
                             <!-- <a href="courses.html" class="btn btn-primary btn-sm">View all</a> -->

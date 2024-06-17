@@ -14,8 +14,8 @@ from .views import (
                     CheckCodeView,
                     AdminQuizListView,
                     AdminUserListView,
-                    change_user_level_view
-
+                    change_user_level_view,
+                    AdminLessonListView
                     )
 
 urlpatterns = [
@@ -29,6 +29,7 @@ urlpatterns = [
     path('change-user-level/', change_user_level_view, name="change_user_level"),
     path('quiz-list/', AdminQuizListView.as_view(), name="quiz_list"),
     path('user-list/', AdminUserListView.as_view(), name="user_list"),
+    path('lesson-list/', AdminLessonListView.as_view(), name="lesson_list"),
 
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', CustomLoginView.as_view(), name='login'),

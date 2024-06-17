@@ -29,6 +29,7 @@ from .mixins import (
                         IsStaffUserMixin
                     )
 from .send_code import send_code
+from exam.models import Lesson
 
 from takingtest.models import QuizResult,QuizHistory
 from exam.models import Quiz
@@ -424,12 +425,23 @@ class AdminQuizListView(IsStaffUserMixin, ListView):
     def get_queryset(self):
         return Quiz.objects.filter(is_deleted=False)
     
-    
 
 class AdminUserListView(IsStaffUserMixin, ListView):
     model = get_user_model()
     template_name = "accounts/admin_user_list.html"
     context_object_name = "user_list"
+
+
+class AdminLessonListView(IsStaffUserMixin, TemplateView):
+    # model = Lesson
+    template_name = "accounts/admin_lesson_list.html"
+    # context_object_name = "lesson_list"
+
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        lessons = Lesson.objects.filter()
+        context['lesson_list'] = lessons
+        return context
 
 
 @login_required

@@ -51,11 +51,10 @@
 
 
                 <div class="row">
-
 					<div class="col-12 farsi">
                         <div class="card farsi">
                             <div class="card-header farsi" dir="rtl">
-                                <h4 class="card-title">مجموعه سوالات</h4>
+                                <h4 class="card-title">مدیریت آزمون ها</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive" dir="rtl">
@@ -68,8 +67,8 @@
                                                 <th style="text-align: center;">نام درس</th>
                                                 <th style="text-align: center;">طراح</th>
                                                 <th style="text-align: center;">تعداد سوال</th>
-                                                <th style="text-align: center;">تاریخ  طرح سوال</th>
-                                                <th style="text-align: center;">تاریخ اصلاح سوال</th>
+                                                <th style="text-align: center;">تاریخ  طرح آژمون</th>
+                                                <!-- <th style="text-align: center;">تاریخ اصلاح سوال</th> -->
                                                 <th style="text-align: center;">وضعیت</th>
                                                 <th style="text-align: center;">ویرایش</th>
                                             </tr>
@@ -80,12 +79,12 @@
                                                 <tr>
                                                     <!-- <td><img class="rounded-circle" width="35" src="images/profile/small/pic1.jpg" alt=""></td> -->
                                                     <td style="text-align: center;" >{{forloop.counter}}</td>
-                                                    <td style="text-align: center;" >{{ quiz.name }}</td>
+                                                    <td style="text-align: center;" ><a href="{% url 'quiz_question_update' quiz.id %}"><strong dir="rtl">{{ quiz.name }}</strong></a></td>
                                                     <td style="text-align: center;"><b>{{ quiz.lesson.name }}</b></td>
-                                                    <td style="text-align: center;">{{ quiz.quiz_maker.username }}</td>
+                                                    <td style="text-align: center;">{{ quiz.quiz_maker.get_full_name }}</td>
                                                     <td style="text-align: center;">{{quiz.questions.count}}</td>
                                                     <td style="text-align: center;"><a href="javascript:void(0);"><strong dir="rtl">{{ quiz.j_datetime_created }}</strong></a></td>
-                                                    <td style="text-align: center;"><a href="javascript:void(0);"><strong dir="rtl">{{ quiz.j_datetime_edited }}</strong></a></td>
+                                                    <!-- <td style="text-align: center;"><a href="javascript:void(0);"><strong dir="rtl">{{ quiz.j_datetime_edited }}</strong></a></td> -->
                                                     <td style="text-align: center;"><span class="badge light badge-danger">Udpaid</span></td>
                                                     <td>
                                                         <div class="d-flex" dir="ltr">
@@ -112,6 +111,7 @@
                             </div>
                         </div>
                     </div>
+
 				</div>
             </div>
         </div>

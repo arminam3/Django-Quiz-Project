@@ -1,0 +1,140 @@
+{% extends "_base.html" %}
+
+{% load static %}
+{% load my_tags %}
+	
+	<!-- PAGE TITLE HERE -->
+	{% block title %}
+      <title>QuizList</title>
+    {% endblock title %}
+	
+    {% block head %}
+        <!-- FAVICONS ICON -->
+        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+        <!-- Datatable -->
+        <link href='{% static "./vendor/datatables/css/jquery.dataTables.min.css" %}' rel="stylesheet">
+        <!-- Custom Stylesheet -->
+        <link href='{% static "./vendor/jquery-nice-select/css/nice-select.css" %}' rel="stylesheet">
+        <link href='{% static "./css/style.css" %}' rel="stylesheet">
+        <link href="{% static './css/custumize.css' %}" rel="stylesheet">
+
+    {% endblock head %}
+
+    {% block page_header_name %}
+        مدریریت درس ها
+    {% endblock page_header_name %}
+
+    <!--**********************************
+        Main wrapper start
+        ***********************************-->
+        <div id="main-wrapper">
+            {% block content %}
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body" dir="rtl">
+            <div class="container-fluid">
+				
+                <div class="row page-titles farsi">
+                    <ol class="breadcrumb" dir="rtl" style="text-align: right;">
+                        <li class="breadcrumb-item active"><a href="">مدیریت سایت </a></li>
+                        <li class=""><a href="">
+                            <span class="text-primary">&nbsp; / </span>
+                             لیست درس ها 
+                             </a></li>
+                        <!-- <li class="breadcrumb-item"><a href=""></a></li> -->
+                        <!-- <li class=""><a href="">طراح سوالات : {{quiz.quiz_maker}}</a></li> -->
+                    </ol>
+                </div>
+                <!-- row -->
+
+
+                <div class="row">
+
+					<div class="col-12 farsi">
+                        <div class="card farsi">
+                            <div class="card-header farsi" dir="rtl">
+                                <h4 class="card-title">مدیریت درس ها</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive" dir="rtl">
+                                    <table dir="rtl" id="example3"  class="display" style="min-width: 845px;float: right;">
+                                        <thead dir="rtl">
+                                            <tr>
+                                                <!-- <th></th> -->
+                                                <th style="text-align: center;">شماره</th>
+                                                <th style="text-align: center;"> نام درس  </th>
+                                                <th style="text-align: center;">نام استاد</th>
+                                                <th style="text-align: center;">رشته</th>
+                                                <th style="text-align: center;">ترم</th>
+                                                <th style="text-align: center;">تعداد آزمون ها</th>
+                                                <!-- <th style="text-align: center;">ویرایش</th> -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                            {% for lesson in lesson_list %}
+                                                <tr>
+                                                    <!-- <td><img class="rounded-circle" width="35" src="images/profile/small/pic1.jpg" alt=""></td> -->
+                                                    <td style="text-align: center;" >{{forloop.counter}}</td>
+                                                    <td style="text-align: center;" >{{ lesson.name }}</td>
+                                                    <td style="text-align: center;"><b>{{ lesson.master }}</b></td>
+                                                    <td style="text-align: center;">{{ lesson.get_discipline_display }}</td>
+                                                    <td style="text-align: center;">{{lesson.term|e2fnum}}</td>
+                                                    <td style="text-align: center;">{{lesson.quiz_count|e2fnum}}</td>
+                                                    <!-- <td style="text-align: center;">{{lesson.term}}</td> -->
+                                                    <!-- <td style="text-align: center;"><span class="badge light badge-danger">Udpaid</span></td> -->											
+                                                </tr>
+                                            {% endfor %}
+												</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+        {% endblock content %}
+
+        
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+{% block required_js %}
+      <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="{% static './vendor/global/global.min.js' %}"></script>
+    <script src="{% static './vendor/chart.js/Chart.bundle.min.js' %}"></script>
+	<!-- Apex Chart -->
+	<script src="{% static './vendor/apexchart/apexchart.js' %}"></script>
+	
+    <!-- Datatable -->
+    <!-- <script src="{% static './vendor/datatables/js/jquery.dataTables.min.js' %}"></script> -->
+    <script src="{% static './custom/vendor/jquery.dataTables-cus.min.js' %}"></script>
+    <script src="{% static './custom/js/datatables-cus.init.js' %}"></script>
+
+	<script src="{% static 'vendor/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
+
+    <script src="{% static './js/custom.js' %}"></script>
+	<script src="{% static './js/dlabnav-init.js' %}"></script>
+	<script src="{% static './js/demo.js' %}"></script>
+	<!-- <script src="{% static './js/layout.js' %}"></script> -->
+    <script src="{% static './js/styleSwitcher.js' %}"></script>
+    <script>
+        function deleteQuiz(quiz_id){
+        var button = document.getElementById('delete');
+
+        button.value = quiz_id;}
+    </script>
+{% endblock required_js %}
