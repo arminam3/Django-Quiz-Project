@@ -2,23 +2,24 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 from .views import (
-                    # QuestionListView, 
-                    # QuizDetailView, 
                     QuizQuestionUpdateView, 
-                    # QuestionCreateView, 
                     QuestionUpdateView,
-                    # QuestionDetailView,
                     question_delete_view,
-                    # QuestionListView,
                     QuizCreateView,
                     QuizQuestionCreateView,
                     quiz_delete,
-                    QuizUpdateView
+                    QuizUpdateView,
+
+                    LessonCreateView,
+                    LessonUpdateView
                     )
 
 urlpatterns = [
     path('test/', TemplateView.as_view(template_name="exam/test.html"), name="test"),
     path('test2/', TemplateView.as_view(template_name="exam/quiz/quiz_question_create.html"), name="test"),
+
+    path('lesson-create/', LessonCreateView.as_view(), name="lesson_create"),
+    path('lesson-update/<str:pk>', LessonUpdateView.as_view(), name="lesson_update"),
 
     path('quiz-create/', QuizCreateView.as_view(), name="quiz_create"),
     path('quiz-delete/', quiz_delete, name="quiz_delete"),

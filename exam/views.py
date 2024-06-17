@@ -417,3 +417,41 @@ class QuizUpdateView(IsStaffOrQuizMakerUserMixin, UpdateView):
     def get_success_url(self):
 
         return reverse('quiz_update', args=[self.get_object().id])
+    
+class LessonCreateView(IsStaffUserMixin, CreateView):
+    model = Lesson
+    fields = ('name', 'master', 'discipline', 'term')
+    template_name = 'exam/lesson_create.html'
+
+    def get_success_url(self) -> str:
+        return reverse('lesson_list')
+    
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            f"<strong>لطفا مقادیر را به درستی وارد نمایید.</strong>"
+        )
+        return super().form_invalid(form)
+    
+
+class LessonUpdateView(IsStaffUserMixin, UpdateView):
+    model = Lesson
+    fields = ('name', 'master', 'discipline', 'term')
+    template_name = 'exam/lesson_update.html'
+    context_object_name = 'lesson'
+
+    def get_success_url(self) -> str:
+        return reverse('lesson_update', args=[self.get_object().id])
+    
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            f"<strong>لطفا مقادیر را به درستی وارد نمایید.</strong>"
+        )
+        return super().form_invalid(form)
+    
+    def form_valid(self, form: BaseModelForm):
+        print(self.request.POST)
+        return super().form_valid(form)
+
+
