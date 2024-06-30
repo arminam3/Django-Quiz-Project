@@ -295,11 +295,6 @@ class QuizQuestionCreateView(LoginRequiredMixin, CreateView):
             if (posted_file.get(ques_val['image'])) and posted_file.get(ques_val['image']).size > 200 * 1024:
                 # if :
                 big_image += (f'{num+1} ,')
-                    # messages.error(
-                    #     request,
-                    #     f"<strong>حجم عکس باید کمتر از 200 kb باشد.</strong>"
-                    # )
-                    # return redirect('quiz_create')
             else:
                 new_question = Question.objects.create(
                     text=posted_data.get(ques_val['text']),
@@ -319,7 +314,7 @@ class QuizQuestionCreateView(LoginRequiredMixin, CreateView):
         quiz_question_count = quiz.questions.count()
         messages.success(
         self.request,
-        f"<strong>  آزمون '{quiz.name}' با {quiz_question_count} .سوال در سیستم ثبت شد</strong>"
+        f"<strong>  آزمون '{quiz.name}' با {quiz_question_count} سوال در سیستم ثبت شد</strong>"
             )
         if big_image:
             messages.error(
@@ -328,11 +323,6 @@ class QuizQuestionCreateView(LoginRequiredMixin, CreateView):
             )
         return redirect(reverse('quiz_question_update',args=[self.kwargs['pk']]))
     
-
-
-    
-
-
     
 def multi_question_maker(num=0):
     text = f'text-{num}'
@@ -451,7 +441,6 @@ class LessonUpdateView(IsStaffUserMixin, UpdateView):
         return super().form_invalid(form)
     
     def form_valid(self, form: BaseModelForm):
-        print(self.request.POST)
         return super().form_valid(form)
 
 

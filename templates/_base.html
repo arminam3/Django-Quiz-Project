@@ -360,7 +360,7 @@
                     </li>
 					<li><a class="" href="{% url 'quiz_result_list' %}" aria-expanded="false">
 						<i class="bi bi-file-earmark-break"></i>
-						<span class="nav-text">سابقه آزمون ها</span>
+						<span class="nav-text">کارنامه آزمون ها</span>
 					</a>
 					</li>
 					{% if user.is_authenticated %}
@@ -394,18 +394,22 @@
 					</ul>
 				</li>
 				{% endif %}
-				{% if user.is_authenticated %}
+				{% if user.is_staff %}
 					<li><a class="" href="{% url 'notification_create' %}" aria-expanded="false">
 						<i class="fas fa-paper-plane"></i>
 						<span class="nav-text">ارسال پیام</span>
 					</a>
 					</li>
-					{% endif %}
+				{% endif %}
+				{% if user.is_authenticated %}
+
                     <li><a class="" href="{% url 'notification_list' %}" aria-expanded="false">
 						<i class="far fa-comment-alt"></i>
 						<span class="nav-text">پیام ها</span>
 					</a>
 					</li>
+				{% endif %}
+
                     <!-- <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
 							<i class="bi bi-star"></i>
 							<span class="nav-text">Bootstrap</span>

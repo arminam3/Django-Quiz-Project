@@ -123,18 +123,15 @@ class QuizResultView(CheckHavingProfileMixin, TemplateView):
             user_result_percent = int(quiz_result.score / quiz_result.quiz.questions.count() * 100 ) 
         except:
             context['user_result_percent'] = 5
-
+            
         try:
             score_avg = int(round(quiz_score_avg / quiz_history_count  * 100, 0))
         except:
             score_avg = 0
-
             
         context['score_avg'] = score_avg
         context['quiz_result'] = quiz_result
         context['user_result_percent'] = user_result_percent
-
-
 
         return context
 

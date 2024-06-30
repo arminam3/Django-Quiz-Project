@@ -197,26 +197,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #   },
 # }
 
-# if DEBUG == True:
-#     from dotenv import load_dotenv
-#     load_dotenv()
+if DEBUG == True:
+    from dotenv import load_dotenv
+    load_dotenv()
 
 # # S3 Settings
-# LIARA_ENDPOINT    = os.getenv("LIARA_ENDPOINT")
-# LIARA_BUCKET_NAME = os.getenv("LIARA_BUCKET_NAME")
-# LIARA_ACCESS_KEY  = os.getenv("LIARA_ACCESS_KEY")
-# LIARA_SECRET_KEY  = os.getenv("LIARA_SECRET_KEY")
+LIARA_ENDPOINT    = os.getenv("LIARA_ENDPOINT")
+LIARA_BUCKET_NAME = os.getenv("LIARA_BUCKET_NAME")
+LIARA_ACCESS_KEY  = os.getenv("LIARA_ACCESS_KEY")
+LIARA_SECRET_KEY  = os.getenv("LIARA_SECRET_KEY")
 # LIARA_ENDPOINT = 'https://storage.iran.liara.space'
 # LIARA_BUCKET_NAME = 'testy-bucket'
 # LIARA_ACCESS_KEY = 'h3scat6u25qv396g'
 # LIARA_SECRET_KEY = '7a2f7b65-811f-4b81-972f-c5e791e01633'
 
 # S3 Settings Based on AWS (optional)
-# AWS_ACCESS_KEY_ID       = LIARA_ACCESS_KEY
-# AWS_SECRET_ACCESS_KEY   = LIARA_SECRET_KEY
-# AWS_STORAGE_BUCKET_NAME = LIARA_BUCKET_NAME
-# AWS_S3_ENDPOINT_URL     = LIARA_ENDPOINT
-# AWS_S3_REGION_NAME      = 'us-east-1'  
+AWS_ACCESS_KEY_ID       = LIARA_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY   = LIARA_SECRET_KEY
+AWS_STORAGE_BUCKET_NAME = LIARA_BUCKET_NAME
+AWS_S3_ENDPOINT_URL     = LIARA_ENDPOINT
+AWS_S3_REGION_NAME      = 'us-east-1'  
 
 # CASH
 # CACHES = {

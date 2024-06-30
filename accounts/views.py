@@ -110,7 +110,7 @@ class ProfileUpdateView(CheckHavingProfileMixin, UpdateView):
     def get_success_url(self):
         messages.success(
             self.request,
-            f"<strong>اطلاعات شما با موفقیت تغییر یافت !</strong>"
+            f"<strong>اطلاعات شما با موفقیت تغییر یافت .</strong>"
         )
         return reverse('profile')
 
@@ -282,13 +282,7 @@ class CustomLoginView(admin_views.LoginView):
             f"<strong>خطا !</strong>رمز وارد شده صحیح نمی باشد . "
             )
         return super().post(request, *args, **kwargs)
-    
-    def get_success_url(self):
-        messages.success(
-            self.request,
-            f"<strong> خوش آمدید</strong>"
-        )
-        return super().get_success_url()
+
 
 
 class CheckCodeView(SmsSendLimitByIpMixin, TemplateView):
@@ -449,6 +443,7 @@ def change_user_level_view(request):
     choosen_user = get_object_or_404(get_user_model(), id=request.GET.get('user_id'))
     action = request.GET.get('action')
     user = request.user
+ 
     try:
         Profile.objects.get(user=choosen_user)
     except:

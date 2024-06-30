@@ -20,13 +20,13 @@
     <div class="container-fluid " dir="rtl">
         <div class="row page-titles">
             <ol class="breadcrumb" dir="rtl" style="text-align: right;">
-                <li class="breadcrumb-item active"><a href="">ترم {{quiz.lesson.term|e2fnum}}</a></li>
+                <li class="breadcrumb-item active"><a href=""> {{quiz.lesson.name}}</a></li>
                 <li class="breadcrumb-item"><a href="">
                     <span class="text-primary">&nbsp; / </span>
                      استاد : {{quiz.lesson.master}}
                      </a></li>
                 <!-- <li class="breadcrumb-item"><a href=""></a></li> -->
-                <li class=""><a href="">طراح سوالات : {{quiz.quiz_maker}}</a></li>
+                <li class=""><a href="">طراح سوالات : {{quiz.quiz_maker.get_full_name}}</a></li>
             </ol>
         </div>
 

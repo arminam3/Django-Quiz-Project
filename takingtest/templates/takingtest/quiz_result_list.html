@@ -68,6 +68,20 @@
                                     <div class="new-arrival-content text-center mt-3
                                     " style="border: inherit;">
                                         <h4 class="mb-1 btn" style="border: none;"><a href="{% url 'taken_exam_detail' quiz_result.exam_number %}">{{quiz_result.quiz.name}}</a></h4><br>
+                                        <ul class="star-rating mb-2">
+                                            <li><i class="bi bi-file-earmark-break text-secondary" style="font-size: medium;">
+
+                                            </i>{{quiz_result.quiz.lesson.name}}</li>
+                                            <!-- <li><i class="fa fa-star"></i></li> -->
+                                            <!-- <li><i class="fa fa-star"></i></li> -->
+                                            <!-- <li><i class="fa fa-star-half-empty"></i></li> -->
+                                            <!-- <li><i class="fa fa-star-half-empty"></i></li> -->
+                                        </ul>
+                                        <ul class="star-rating mb-2">
+                                            <li><i class="fa fa-star"></i>
+                                                <span class="">{{quiz_result.quiz_result_score_percent|e2fnum}} %</span>
+                                            </li>
+                                        </ul>
                                         <h4 class="mb-1 btn
                                         {% if quiz_result.quiz_result_score_percent >= 75 %}
                                             btn-secondary
@@ -77,14 +91,7 @@
                                             btn-primary
                                         {% endif %}
                                         " style="border: none;"><a class=" text-white" href="{% url 'taken_exam_detail' quiz_result.exam_number %}">مشاهده جزئیات </a></h4>
-                                        <ul class="star-rating mb-2">
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star-half-empty"></i></li>
-                                            <li><i class="fa fa-star-half-empty"></i></li>
-                                        </ul>
-                                        <h6 class="">{{quiz_result.quiz_result_score_percent|e2fnum}} %</h6>
+                                    
                                     </div>
                                 </div>
                             </div>

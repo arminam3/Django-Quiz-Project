@@ -69,6 +69,8 @@
 						<div class="row">
 						{% for question in quiz.questions.all %}		
 							{% csrf_token %}
+							{% if not question.is_deleted %}
+							  
 							<div class="col-xl-6 col-lg-6" >
 									<div class="card" dir="">
 										<div class="card-header  " >
@@ -160,6 +162,8 @@
 										</div>
 									</div>
 							</div>
+							{% endif %}
+
 						{% endfor %}
 
 						<div>

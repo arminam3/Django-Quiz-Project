@@ -50,11 +50,11 @@
                                             <button type="button" onclick="send_code()" class="btn btn-primary btn-block" id="timerButton">ارسال کد تایید</button>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="mb-1"><strong>تلفن همراه</strong></label>
+                                            <label class="mb-1"><strong>کد تایید</strong></label>
                                             <input type="number" name="verification_code" class="form-control">
                                         </div>
                                         <div class="text-center mt-4">
-                                            <button type="submit" class="btn btn-success btn-block">ثبت نام</button>
+                                            <button type="submit" class="btn btn-success btn-block">ورود </button>
                                         </div>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
             
             if (timeLeft < 0) {
                 clearInterval(countdown);
-                timerButton.innerHTML = 'Send';
+                timerButton.innerHTML = 'ارسال کد تایید';
                 timerButton.classList.add('btn-primary')
                 timerButton.classList.remove('btn-dark')
             }
@@ -123,17 +123,17 @@
     }
     </script>
     <script>
-        var send_code = function() {
-        const username = document.getElementById('id_username').value;
-        fetch(`{% url 'check_code' %}?username=${username}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    window.location.href ='{% url "check_code" %}'
-                } 
-            })
+        // var send_code = function() {
+        // const username = document.getElementById('id_username').value;
+        // fetch(`{% url 'check_code' %}?username=${username}`)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         if (data.error) {
+        //             window.location.href ='{% url "check_code" %}'
+        //         } 
+        //     })
 
-    }
+    // }
 
     </script>
 </body>

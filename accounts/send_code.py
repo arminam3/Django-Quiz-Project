@@ -23,7 +23,7 @@ def send_code(request, phone_number, user_code=0):
             except:
                 messages.error(
                     request,
-                    f"<strong>خطا !</strong> کاربر وارد شده غلط می باشد. دوباره امتحان کنید:"
+                    f"<strong>خطا !</strong> کاربر وارد شده غلط می باشد. دوباره امتحان کنید."
                 )
                 return JsonResponse({'error': 'some error'}, status=500)
 
@@ -40,19 +40,30 @@ def send_code(request, phone_number, user_code=0):
 
             payload = {}
             headers = {}
-
-            try:
-                response = requests.get(url, headers=headers, data=payload)
-                response.raise_for_status()
-                print(response.text)
-
-            except requests.exceptions.HTTPError as err:
-                messages.error(
+            print('------0----')
+            # limit send sms by every 2 minutes
+            if VerificationCode.objects.filter(user=user):
+                verificatio_code = VerificationCode.objects.filter(user=user).order_by('-datetime_created')[0]
+                time_difference  = timezone.now() - verificatio_code.datetime_created
+                if time_difference.total_seconds() < 120:
+                    messages.error(
                     request,
-                    f"<strong>خطا !</strong>متاسفانه کد ارسال نشد :"
-                )
-                print(err)
-                return redirect('check_code')
+                    f"<strong>خطا !</strong>به تازگی کد در خواست ارسال کد داده اید باید 2 دقیقه منتظر بمانید. :"
+                    )
+                    return JsonResponse({'error': 'some error'}, status=500)
+
+            # try:
+                # response = requests.get(url, headers=headers, data=payload)
+                # response.raise_for_status()
+                # print(response.text)
+
+            # except requests.exceptions.HTTPError as err:
+                # messages.error(
+                #     request,
+                #     f"<strong>خطا !</strong>متاسفانه کد ارسال نشد :"
+                # )
+                # print(err)
+                # return redirect('check_code')
 
             verificatio_code = VerificationCode.objects.create(
                 user=user,
@@ -61,18 +72,16 @@ def send_code(request, phone_number, user_code=0):
             print(verificatio_code.code)
                 
             return verificatio_code
+        
         else:
-            
-            
             verificatio_code = VerificationCode.objects.filter(user=user).order_by('-datetime_created')[0]
             time_difference  = timezone.now() - verificatio_code.datetime_created
-            if time_difference.total_seconds()  < 120:
+            if time_difference.total_seconds() < 120:
                 admissible_time = True
             else : 
                 admissible_time = False
             try:
                 if verificatio_code.code == user_code and admissible_time:
-                    print('xxxx----xxxxxx')
                     print(verificatio_code.code)
                     valide_code = True
             except:
