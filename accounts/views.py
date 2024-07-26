@@ -7,7 +7,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import views as admin_views
-from django.contrib.auth.views import PasswordResetConfirmView
 from django.db.models import Avg, Sum, Count
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -38,7 +37,6 @@ class RegisterView(CreateView):
     model = get_user_model()
     template_name = "registration/register.html"
     form_class = RegisterForm
-    # success_url = reverse_lazy('profile_create')
 
     def get_success_url(self):
         messages.success(
@@ -46,18 +44,7 @@ class RegisterView(CreateView):
             "<strong>خوش آمدید !</strong>  اطلاعات شما با موفقیت ثبت شد. برای دسترسی به صفخات سامانه لظفا پروفایل خود را تکمیل کنید."
         )
         login(self.request, self.object)
-        return reverse('profile_create')
-        
-    # def post(self, request, *args, **kwargs):
-    #     register_form = RegisterForm(request.POST)
-    #     register_form.initial['password2'] = request.POST.get('password1')
-    #     register_form.save()
-        # mutable_post = request.POST.copy()  
-        # request.POST['password2'] = request.POST.get('password1')
-        # request.POST = mutable_post
-        # return super().post(request, *args, **kwargs)
-
-    
+        return reverse('profile_create')  
 
 
 class CustomPasswordChangeView(admin_views.PasswordChangeView):
@@ -97,9 +84,6 @@ class ProfileDetailView(CheckHavingProfileMixin, TemplateView):
         context['user_quiz_count'] = user_quiz_count
         context['term_user_quiz_count'] = term_user_quiz_count
         return context
-
-
-
 
 
 class ProfileUpdateView(CheckHavingProfileMixin, UpdateView):
@@ -181,13 +165,23 @@ class ProfileCreateView(LoginRequiredMixin, DoNotHaveProfileMixin, CreateView):
         posted_data = request.POST
         # check the sented code
         phone_number = posted_data.get('phone_number')
+        email = posted_data.get('email')
         profile_exist = Profile.objects.filter(phone_number=phone_number)
+        check_unique_user_email = get_user_model().objects.filter(email=email)
 
         # error if phone_number is not unique
         if profile_exist:
             messages.error(
                     request,
                     f"<strong>خطا !</strong> شماره تلفن قبلا در سیستم ثبت شده است ."
+                )
+            return redirect('profile_create')
+        
+        # error if emeil is not unique
+        if check_unique_user_email:
+            messages.error(
+                    request,
+                    f"<strong>خطا !</strong> ایمیل قبلا در سیستم ثبت شده است ."
                 )
             return redirect('profile_create')
         

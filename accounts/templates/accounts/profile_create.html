@@ -100,33 +100,33 @@
                                                     <label class="col-lg-4 col-form-label" for="phone_number">تلفن همراه : 
                                                         <span class="text-danger">*</span>
                                                     </label>
-                                                    <div class="col-lg-4">
-                                                        <input type="text" maxlength="11" minlength="11" class="form-control" id="phone_number" value="{{user.profile.phone_number}}" name="phone_number" required>
-                                                        <!-- <input type="text" class="form-control" id="validationCustom08" value="6789 345 0912" name="phone_number" required> -->
+                                                    <div class="col-lg-6">
+                                                        <input type="number" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="11" minlength="11" class="form-control" id="phone_number" value="{{user.profile.phone_number}}" name="phone_number" required>
 														<div class="invalid-feedback">
-
 														</div>
                                                     </div>
-                                                    <div class="col-lg-4">
-                                                        <button type="button" onclick="send_code()" class="btn btn-primary btn-block" style="margin-top: 1em;">ارسال کد تایید</button>
-                                                    </div>
+                                                  
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label class="col-lg-4 col-form-label" for="validationCustom08">کد تایید 
                                                         <span class="text-danger">*</span>
                                                     </label>
-                                                    <div class="col-lg-4">
+                                                    <div class="col-lg-6">
                                                         <input type="text" maxlength="11" minlength="11" class="form-control" id="validationCustom08" value="" name="user_code" required>
                                                         <!-- <input type="text" class="form-control" id="validationCustom08" value="6789 345 0912" name="phone_number" required> -->
 														<div class="invalid-feedback">
-
-														</div>
+                                                            
+                                                        </div>
                                                     </div>
                                                     <div class="col-lg-4">
-                                                        <!-- <span class="btn btn-primary btn-block"> کد تایید</span> -->
+                                                    </div>
+                                                    <!-- <div class="col-lg-4">
+                                                    </div> -->
+                                                    <div class="col-lg-6">
+                                                        <button type="button" id="timerButton"  onclick="send_code()" class="btn btn-primary btn-block" style="margin-top: 0.5em;">ارسال کد تایید</button>
                                                     </div>
                                                 </div>
-
+                                                            
                                                 <div class="mb-3 row">
                                                     <label class="col-lg-4 col-form-label" for="id_term">ترم : <span
                                                         class="text-danger">*</span>
@@ -190,17 +190,53 @@
         <script src="{% static './js/styleSwitcher.js' %}"></script>
 
         <script>
+        //     var send_code = function() {
+        //     const phone_number = document.getElementById('phone_number').value;
+        //     fetch(`{% url 'profile_create' %}?phone_number=${phone_number}`)
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.error) {
+        //                 window.location.href ='{% url "profile_create" %}'
+        //             } 
+        //         })
+        
+        // }
+        
+        </script>
+        <script>
+
             var send_code = function() {
             const phone_number = document.getElementById('phone_number').value;
             fetch(`{% url 'profile_create' %}?phone_number=${phone_number}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.error) {
-                        window.location.href ='{% url "profile_create" %}'
-                    } 
+                    // if (data.error) {
+                    //     window.location.href ='{% url "check_code" %}'
+                    // } 
                 })
-        
+                const input = document.getElementById('phone_number').value;
+                    if (input) {
+                let timeLeft = 5; // 2 minutes in seconds
+                const timerButton = document.getElementById('timerButton');
+                timerButton.classList.remove('btn-primary')
+                timerButton.classList.add('btn-dark')
+                timerButton.disabled = true
+                const countdown = setInterval(() => {
+                    timerButton.innerHTML = `ارسال مجدد: ${toPersianDigits(timeLeft--)} ثانیه`;
+                    
+                    if (timeLeft < 0) {
+                        clearInterval(countdown);
+                        timerButton.innerHTML = 'ارسال کد تایید';
+                        timerButton.classList.add('btn-primary')
+                        timerButton.classList.remove('btn-dark')
+                        timerButton.disabled = false
+                    }
+                }, 1000); // Update every second
+            }
         }
+            function toPersianDigits(number) {
+                        return number.toString().replace(/\d/g, d => String.fromCharCode(d.charCodeAt(0) + 1728));
+                    }
         
         </script>
         
