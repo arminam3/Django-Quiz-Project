@@ -25,7 +25,7 @@ from .forms import QuizHistoryForm
 from accounts.mixins import CheckHavingProfileMixin, IsStaffOrQuizMakerUserMixin, DoNotHaveProfileMixin
 
 
-class QuizHistoryCreateView(IsStaffOrQuizMakerUserMixin, CreateView):
+class QuizHistoryCreateView(CheckHavingProfileMixin, CreateView):
     model = QuizHistory
     template_name = "takingtest/take_an_exam.html"
     form_class = QuizHistoryForm
@@ -157,8 +157,8 @@ class QuizResultListView(CheckHavingProfileMixin, ListView):
     context_object_name = "quiz_result_list"
 
     def get_queryset(self):
-        quiz_result_list = QuizResult.objects.filter(user=self.request.user)
-                
+        quiz_result_list = QuizResult.objects.filter(user=self.request.user).order_by('-datetime_created')       
+        # pagination
         paginator = Paginator(quiz_result_list, 20)
         page = self.request.GET.get('page')
 

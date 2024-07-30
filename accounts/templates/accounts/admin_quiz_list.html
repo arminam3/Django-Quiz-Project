@@ -88,14 +88,24 @@
                                                     <td style="text-align: center;"><span class="badge light badge-danger">Udpaid</span></td>
                                                     <td>
                                                         <div class="d-flex" dir="ltr">
-                                                            <button onclick="deleteQuiz('{{quiz.question.id}}')"
-                                                                class="btn btn-danger shadow btn-xs sharp me-1" id="delete_button"
-                                                                data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                            <a href="{% url 'quiz_question_update' quiz.id %}" class="btn btn-info shadow btn-xs sharp me-1">
-                                                                <i class="fas fa-pencil-alt"></i>
-                                                            </a>
+                                                            {% if not quiz.is_deleted %}
+                                                                <button onclick="deleteQuiz('{{quiz.id}}')"
+                                                                    class="btn btn-danger shadow btn-xs sharp me-1" id="delete_button"
+                                                                    data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                                <a href="{% url 'quiz_question_update' quiz.id %}" class="btn btn-info shadow btn-xs sharp me-1">
+                                                                    <i class="fas fa-pencil-alt"></i>
+                                                                </a>
+                                                                {% else %}
+                                                                    <a href="" class="btn btn-secondary shadow btn-xs sharp me-1" style="visibility: hidden;">
+                                                                    </a>
+                                                                    <a href="{% url 'quiz_return' quiz.id %}" class="btn btn-secondary shadow btn-xs sharp me-1">
+                                                                        <i class="fas fa-undo-alt"></i>
+                                                                    </a>
+                                                                
+                                                            {% endif %}
+
                                                         </div>												
                                                     </td>												
                                                 </tr>
@@ -122,11 +132,6 @@
             {% csrf_token %}
             <div class="col-xl-2 col-lg-4">
                 <div class="card" dir="rtl">
-                    <!-- <button class="btn btn-danger" type="submit" name="button-name" value="delete_question">
-                        حذف سوال 
-                    </button> -->
-                    <button type="button" class="btn btn-primary farsi" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">حذف سوال</button>
-                        <!-- Modal -->
                         <div class="modal fade farsi" id="exampleModalCenter">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content" >
@@ -140,13 +145,11 @@
                                     </div>
                                     <div class="modal-footer farsi">
                                         <button type="button" class="btn btn-dark light" data-bs-dismiss="modal">لغو</button>
-                                        <button type="submit" class="btn btn-primary" name="delete_question" value="" id="delete"> حذف </button>
+                                        <button type="submit" class="btn btn-primary" name="quiz_id_for_delete" value="" id="delete"> حذف </button>
                                     </div>
                                 </div>
                             </div>
                         </div>																						
-                        <!-- <button type="button" class="btn btn-danger btn sweet-confirm sss">حذف سوال</button> -->
-                    
                     </div>																																																																																				
             </div>
         </form>

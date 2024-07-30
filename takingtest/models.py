@@ -9,7 +9,8 @@ class QuizHistory(models.Model):
         ('1', '1'),
         ('2', '2'),
         ('3', '3'),
-        ('4', '4')
+        ('4', '4'),
+        ('5', '5')
     )
     exam_number = models.UUIDField(null=True)
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, blank=True, null=True, related_name="history")

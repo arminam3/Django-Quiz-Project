@@ -15,6 +15,13 @@
     صفحه ی آزمون
 {% endblock page_header_name %}
 
+{% block timer %}
+<h4 class="badge badge-primary">
+    <span id="timer"></span> 
+    <i class="fa-regular fa-clock"></i> 
+</h4>
+{% endblock timer %}
+
 {% block content %}
 <div class="content-body farsi">
     <div class="container-fluid " dir="rtl">
@@ -38,6 +45,7 @@
                         <h4 class="card-title farsi" >
                             {{quiz.name}}
                         </h4>
+
                     </div>
                     <div class="card-body">
                         <div class="basic-form">
@@ -89,8 +97,14 @@
                                                         <input  type="radio" class="form-check-input form-check-input-cus" id="{{question.id}}-4" name="{{question.id}}" value="4" required>
                                                         <label class="form-check-label form-check-label-cus " for="{{question.id}}-4" onclick="scrollToNext('text{{forloop.counter}}')" >{{question.choice_4}}</label>
                                                     </div>
+                                                </div>
+                                                <div class="col-xl-4 col-xxl-12 col-12">
+                                                    <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info " hidden>
+                                                        <input  type="radio" class="form-check-input form-check-input-cus" id="{{question.id}}-5" name="{{question.id}}" value="5" required checked >
+                                                        <label class="form-check-label form-check-label-cus " for="{{question.id}}-5" onclick="scrollToNext('text{{forloop.counter}}')"></label>
+                                                    </div>
+                                                </div>
                                                 {% endfor %}
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -102,7 +116,7 @@
                     <div class="col-sm-4 "></div>
                     <div class="col-sm-4 card card-cus" >
 
-                        <button type="submit" class="btn btn-success">اتمام آزمون</button>
+                        <button type="submit" class="btn btn-success" id="postButton">اتمام آزمون</button>
                     </div>
                     <div class="col-sm-4 " style="background: none;">
                       
@@ -161,27 +175,33 @@
             $('#smartwizard').smartWizard(); 
         });
     </script>
-    <!-- <script>
+    <script>
+        const timerElement = document.getElementById('timer');
+        const postButton = document.getElementById('postButton');
+        
+        function convertToPersianNumber(number) {
+          const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+          return number.toString().replace(/\d/g, (digit) => persianNumbers[digit]);
+        }
+    
+        let timeLeft = '{{quiz.time.total_seconds}}'; // set quiz time in timer
+        
+        const countdown = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            
+            timerElement.textContent = convertToPersianNumber(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+            
+            if (timeLeft === 0) {
+                clearInterval(countdown);
+                postButton.click(); // Simulate button click
+            } else {
+                timeLeft--;
+            }
+        }, 1000); // Update every second
+        </script>
 
-        function scrollToNext(nextParagraphId) {
-          const navbarHeight = document.getElementById('navbar').offsetHeight;
-          const nextParagraph = document.getElementById(nextParagraphId);
-          if (nextParagraph) {
-                // window.scrollBy(0, -navbarHeight); // Adjust scroll position to consider navbar
-                nextParagraph.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }
-    </script> -->
-    <!-- <script>
-        function scrollToNext(text_id) {
-            const navbarHeight = document.getElementById('navbar').offsetHeight;
-            const nextParagraph = document.getElementById(text_id).nextElementSibling;
-          if (nextParagraph) {
-              nextParagraph.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              window.scrollBy(0, 2 * navbarHeight); // Adjust scroll position to consider navbar
-            };
-        }
-    </script> -->
+
 {% endblock required_js %}
 
 

@@ -149,8 +149,8 @@ class QuestionUpdateView(IsStaffOrQuizMakerUserMixin, UpdateView):
 
         # delete image path and image file
         if obj.image is not None and  posted_data.get('delete_image') == 'on':
-            if os.path.isfile(obj.image.path):
-                os.remove(obj.image.path)
+            # if os.path.isfile(obj.image.path):
+            #     os.remove(obj.image.path)
             obj.image = None
             obj.save()
 
@@ -347,24 +347,42 @@ def multi_question_maker(num=0):
     return context
 
 
-def quiz_delete(request, pk):
+def quiz_delete_view(request):
     user = request.user
-    quiz = get_object_or_404(Quiz, pk=posted_data.get('quiz_id'))
+    posted_data = request.POST
+    quiz = get_object_or_404(Quiz, pk=posted_data.get('quiz_id_for_delete'))
 
     if user.is_staff or (quiz.quiz_maker == user):
         if request.method == "POST":
-            posted_data = request.POST
             for question in quiz.questions.all():
                 question.is_deleted = True
+                question.save()
             quiz.is_deleted = True
             quiz.save()
-        return JsonResponse({'message': 'question deleted.'}, status=200)
+        return (redirect('quiz_list'))
     messages.error(
         request,
         f"<strong>شما اجازه حذف آزمون را ندارید.</strong>"
     )
     return JsonResponse({'message': 'not allowed!.'}, status=500)
 
+def quiz_return_view(request, pk):
+    user = request.user
+    posted_data = request.POST
+    quiz = get_object_or_404(Quiz, pk=pk)
+
+    if user.is_staff or (quiz.quiz_maker == user):
+        for question in quiz.questions.all():
+            question.is_deleted = False
+            question.save()
+        quiz.is_deleted = False
+        quiz.save()
+        return (redirect('quiz_list'))
+    messages.error(
+        request,
+        f"<strong>شما اجازه حذف آزمون را ندارید.</strong>"
+    )
+    return JsonResponse({'message': 'not allowed!.'}, status=500)
 
 class QuizUpdateView(IsStaffOrQuizMakerUserMixin, UpdateView):
     model = Quiz

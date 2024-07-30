@@ -38,6 +38,7 @@ class Question(models.Model):
     choice_2 = models.CharField(max_length=511)
     choice_3 = models.CharField(max_length=511)
     choice_4 = models.CharField(max_length=511)
+    choice_5 = models.CharField(max_length=1, null=True, blank=True)
     answer = models.CharField(max_length=1, choices=CHOICES)
     explanation = models.TextField(blank=True, null=True)
     question_maker = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, blank=True, null=True)

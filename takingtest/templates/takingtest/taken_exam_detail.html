@@ -62,10 +62,12 @@
 						<div class="row">
 						{% for quiz_history in quiz_histories %}		
 							{% csrf_token %}
-							<div class="col-xl-6 col-lg-6" >
+							<div class="col-xl-6 col-lg-6">
 									<div class="card" dir="">
 										<div class="card-header 
-                                        {% if quiz_history.question.answer != quiz_history.user_answer %}
+										{% if quiz_history.user_answer == '5' %}
+											bg-warning
+                                        {% elif quiz_history.question.answer != quiz_history.user_answer %}
                                             bg-primary-cus
                                         {% else %}
                                             bg-success-cus

@@ -7,7 +7,8 @@ from .views import (
                     question_delete_view,
                     QuizCreateView,
                     QuizQuestionCreateView,
-                    quiz_delete,
+                    quiz_delete_view,
+                    quiz_return_view,
                     QuizUpdateView,
 
                     LessonCreateView,
@@ -22,7 +23,8 @@ urlpatterns = [
     path('lesson-update/<str:pk>', LessonUpdateView.as_view(), name="lesson_update"),
 
     path('quiz-create/', QuizCreateView.as_view(), name="quiz_create"),
-    path('quiz-delete/', quiz_delete, name="quiz_delete"),
+    path('quiz-delete/', quiz_delete_view, name="quiz_delete"),
+    path('quiz-return/<str:pk>', quiz_return_view, name="quiz_return"),
     path('quiz-update/<str:pk>/', QuizUpdateView.as_view(), name="quiz_update"),
     # path('quiz-detail/<str:pk>/', QuizDetailView.as_view(), name="quiz_detail"),
     path('quiz-question-create/<str:pk>/', QuizQuestionCreateView.as_view(), name="quiz_question_create"),

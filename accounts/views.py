@@ -411,7 +411,7 @@ class AdminQuizListView(IsStaffUserMixin, ListView):
     context_object_name = "quiz_list"
 
     def get_queryset(self):
-        return Quiz.objects.filter(is_deleted=False)
+        return Quiz.objects.filter()
     
 
 class AdminUserListView(IsStaffUserMixin, ListView):
