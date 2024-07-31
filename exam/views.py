@@ -210,8 +210,7 @@ def question_delete_view(request, pk):
     question_quiz = Quiz.objects.filter(questions__id=question.id)
     for quiz in question_quiz:
         quiz.questions.remove(question)
-
-    return redirect('home')
+    return redirect(reverse('quiz_question_update', args=[question_quiz[0].pk]))
 
 
 # class QuestionListView(ListView):
@@ -462,3 +461,57 @@ class LessonUpdateView(IsStaffUserMixin, UpdateView):
         return super().form_valid(form)
 
 
+
+class QuizAddQuestionView(IsStaffOrQuizMakerUserMixin, CreateView):
+    model = Question
+    template_name = "exam/quiz/quiz_question_create.html"
+    fields = ['text']
+
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        # another quiz_maker can't add quesions
+        posted_data = request.POST
+        posted_file = request.FILES
+        user = request.user
+        quiz = Quiz.objects.get(pk=self.kwargs['pk'])
+
+        if (not user.is_staff) and (user.profile.is_quiz_maker != quiz.quiz_maker):
+            return HttpResponse('شما اجازه ثبت سوال برای این آزمون را ندارید')
+
+        num = 0
+        big_image = ''
+        while(posted_data.get(f'text-{num}')):
+            ques_val = multi_question_maker(num)
+            if (posted_file.get(ques_val['image'])) and posted_file.get(ques_val['image']).size > 200 * 1024:
+                # if :
+                big_image += (f'{num+1} ,')
+            else:
+                new_question = Question.objects.create(
+                    text=posted_data.get(ques_val['text']),
+                    choice_1=posted_data.get(ques_val['choice_1']),
+                    choice_2=posted_data.get(ques_val['choice_2']),
+                    choice_3=posted_data.get(ques_val['choice_3']),
+                    choice_4=posted_data.get(ques_val['choice_4']),
+                    answer=posted_data.get(ques_val['answer']),
+                    image=posted_file.get(ques_val['image']),
+                    explanation=posted_data.get(ques_val['explanation']),
+                    question_maker = user,
+                    )
+                    
+                quiz.questions.add(new_question)
+                
+            num += 1
+        quiz_question_count = quiz.questions.count()
+        messages.success(
+        self.request,
+        f"<strong>  آزمون '{quiz.name}' با {quiz_question_count} سوال در سیستم ثبت شد</strong>"
+            )
+        if big_image:
+            messages.error(
+                request,
+                f"<strong>سوال {big_image[:-1:]} به دلیل حجم بالای عکس (بالای 200 kb) ذخیره نشدند.</strong>"
+            )
+        return redirect(reverse('quiz_question_update',args=[self.kwargs['pk']]))
+
+    def get_success_url(self):
+        return reverse('quiz_question_update',args=[self.kwargs['pk']])

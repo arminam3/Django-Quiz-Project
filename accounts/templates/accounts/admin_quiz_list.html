@@ -69,8 +69,8 @@
                                                 <th style="text-align: center;">تعداد سوال</th>
                                                 <th style="text-align: center;">تاریخ  طرح آژمون</th>
                                                 <!-- <th style="text-align: center;">تاریخ اصلاح سوال</th> -->
-                                                <th style="text-align: center;">وضعیت</th>
                                                 <th style="text-align: center;">ویرایش</th>
+                                                <th style="text-align: center;">وضعیت</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -85,7 +85,6 @@
                                                     <td style="text-align: center;">{{quiz.questions.count}}</td>
                                                     <td style="text-align: center;"><a href="javascript:void(0);"><strong dir="rtl">{{ quiz.j_datetime_created }}</strong></a></td>
                                                     <!-- <td style="text-align: center;"><a href="javascript:void(0);"><strong dir="rtl">{{ quiz.j_datetime_edited }}</strong></a></td> -->
-                                                    <td style="text-align: center;"><span class="badge light badge-danger">Udpaid</span></td>
                                                     <td>
                                                         <div class="d-flex" dir="ltr">
                                                             {% if not quiz.is_deleted %}
@@ -107,7 +106,8 @@
                                                             {% endif %}
 
                                                         </div>												
-                                                    </td>												
+                                                    </td>	
+                                                    <td style="text-align: center;"><span class="badge light badge-danger">Udpaid</span></td>
                                                 </tr>
 
 

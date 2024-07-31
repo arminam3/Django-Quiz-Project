@@ -7,6 +7,7 @@ from .views import (
                     question_delete_view,
                     QuizCreateView,
                     QuizQuestionCreateView,
+                    QuizAddQuestionView,
                     quiz_delete_view,
                     quiz_return_view,
                     QuizUpdateView,
@@ -29,6 +30,7 @@ urlpatterns = [
     # path('quiz-detail/<str:pk>/', QuizDetailView.as_view(), name="quiz_detail"),
     path('quiz-question-create/<str:pk>/', QuizQuestionCreateView.as_view(), name="quiz_question_create"),
     path('quiz-question-update/<str:pk>/', QuizQuestionUpdateView.as_view(), name="quiz_question_update"),
+    path('quiz-add-question/<str:pk>/', QuizAddQuestionView.as_view(), name="quiz_add_question"),
 
     # path('question-create/', QuestionCreateView.as_view(), name="question_create"),
     path('question-update/<str:pk>/', QuestionUpdateView.as_view(), name="question_update"),
