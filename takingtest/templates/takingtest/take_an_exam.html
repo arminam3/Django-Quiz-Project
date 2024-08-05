@@ -4,45 +4,45 @@
 
 
 {% block title %}
-  <title>take an exam</title>
+<title>take an exam</title>
 {% endblock title %}
 
 {% block head %}
-	<link href="{% static './vendor/lightgallery/css/lightgallery.min.css' %}" rel="stylesheet">
+<link href="{% static './vendor/lightgallery/css/lightgallery.min.css' %}" rel="stylesheet">
 {% endblock head %}
 
 {% block page_header_name %}
-    صفحه ی آزمون
+صفحه ی آزمون
 {% endblock page_header_name %}
 
 {% block timer %}
 <h4 class="badge badge-primary">
-    <span id="timer"></span> 
-    <i class="fa-regular fa-clock"></i> 
+    <span id="timer"></span>
+    <i class="fa-regular fa-clock"></i>
 </h4>
 {% endblock timer %}
 
 {% block content %}
 <div class="content-body farsi">
-        <div class="container-fluid " dir="rtl">
-            <div class="row page-titles">
-                <ol class="breadcrumb" dir="rtl" style="text-align: right;">
-                    <li class="breadcrumb-item active"><a href=""> {{quiz.lesson.name}}</a></li>
-                    <li class="breadcrumb-item"><a href="">
+    <div class="container-fluid " dir="rtl">
+        <div class="row page-titles">
+            <ol class="breadcrumb" dir="rtl" style="text-align: right;">
+                <li class="breadcrumb-item active"><a href=""> {{quiz.lesson.name}}</a></li>
+                <li class="breadcrumb-item"><a href="">
                         <span class="text-primary">&nbsp; / </span>
                         استاد : {{quiz.lesson.master}}
-                        </a></li>
-                    <!-- <li class="breadcrumb-item"><a href=""></a></li> -->
-                    <li class=""><a href="">طراح سوالات : {{quiz.quiz_maker.get_full_name}}</a></li>
-                </ol>
-            </div>
+                    </a></li>
+                <!-- <li class="breadcrumb-item"><a href=""></a></li> -->
+                <li class=""><a href="">طراح سوالات : {{quiz.quiz_maker.get_full_name}}</a></li>
+            </ol>
+        </div>
 
-            <div class="row">
-                <form class="farsi" action="{% url 'take_an_exam' quiz.id %}" method="POST" >
-                <div class="col-xl-12 col-lg-12 farsi"  style="font-size: medium ;">
+        <div class="row">
+            <form class="farsi" action="{% url 'take_an_exam' quiz.id %}" method="POST">
+                <div class="col-xl-12 col-lg-12 farsi" style="font-size: medium ;">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title farsi" >
+                            <h4 class="card-title farsi">
                                 {{quiz.name}}
                             </h4>
 
@@ -51,84 +51,116 @@
                             <div class="basic-form">
                                 <div class="card-body">
                                     <div class="basic-form">
-                                            {% for question in quiz.questions.all %}
-                                                {% if forloop.counter != 1 %}
-                                                    <hr>
-                                                {% endif %}
-                                                {% csrf_token %}
-                                                <div class="mb-1 row">
-                                                    <label class="col-sm-11 col-form-label" id="text{{forloop.counter0}}"  style="text-align: justify;">
-                                                        <h4 class="card-title col-12" >
-                                                            <span href="" class="badge  badge-primary">
-                                                            {{forloop.counter|e2fnum}}
-                                                            </span> 
-                                                            {{question.text}}</h4>
-                                                    </label>
+                                        {% for question in question_list %}
+                                        {% if forloop.counter != 1 %}
+                                        <hr>
+                                        {% endif %}
+                                        {% csrf_token %}
+
+                                        <div class="mb-1 row">
+                                            <label class="col-sm-11 col-form-label" id="text{{forloop.counter0}}"
+                                                style="text-align: justify;">
+                                                <h4 class="card-title col-12">
+                                                    <span href="" class="badge  badge-primary">
+                                                        {{forloop.counter|e2fnum}}
+                                                    </span>
+                                                    {{question.text}}
+                                                </h4>
+                                            </label>
+                                        </div>
+                                        {% if question.image %}
+                                        <div id="" class="" style="text-align: center;">
+                                            <a href="{{question.image.url}}" data-exthumbimage="images/big/img1.jpg"
+                                                data-src="images/big/img1.jpg" class="col-lg-3 col-md-6 mb-4">
+                                                <img class="image-container-zoom-cus" src="{{question.image.url}}"
+                                                    alt=""
+                                                    style="max-height: 10em;margin-right:1.5em;border-radius: 1em;display: block; margin: 0 auto;" />
+                                                <p style="font-size: 0.7em;margin-right:2.5em;white-space: nowrap;">با
+                                                    کلیک بر تصویر بزرگنمایی کنید.</p>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+                                        <div class="row">
+                                            <div class="col-xl-4 col-xxl-12 col-12">
+                                                <div
+                                                    class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
+                                                    <input type="radio" class="form-check-input form-check-input-cus"
+                                                        id="{{question.id}}-1" name="{{question.id}}" value="1"
+                                                        required>
+                                                    <label class="form-check-label form-check-label-cus "
+                                                        for="{{question.id}}-1"
+                                                        onclick="scrollToNext('text{{forloop.counter}}')">{{question.choice_1}}</label>
                                                 </div>
-                                                {% if question.image %}
-                                                <div id="" class="" style="text-align: center;"> 
-                                                    <a href="{{question.image.url}}" data-exthumbimage="images/big/img1.jpg" data-src="images/big/img1.jpg" class="col-lg-3 col-md-6 mb-4">
-                                                        <img class="image-container-zoom-cus" src="{{question.image.url}}" alt="" style="max-height: 10em;margin-right:1.5em;border-radius: 1em;display: block; margin: 0 auto;"/>
-                                                        <p style="font-size: 0.7em;margin-right:2.5em;white-space: nowrap;">با کلیک بر تصویر بزرگنمایی کنید.</p>
-                                                    </a>
-                                                </div>
-                                                {% endif %}
-                                                <div class="row">
-                                                    <div class="col-xl-4 col-xxl-12 col-12">
-                                                        <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
-                                                            <input  type="radio" class="form-check-input form-check-input-cus"  id="{{question.id}}-1" name="{{question.id}}" value="1" required>
-                                                            <label class="form-check-label form-check-label-cus " for="{{question.id}}-1"  onclick="scrollToNext('text{{forloop.counter}}')">{{question.choice_1}}</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-xxl-12 col-12">
-                                                        <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
-                                                            <input  type="radio" class="form-check-input form-check-input-cus" id="{{question.id}}-2" name="{{question.id}}" value="2" required>
-                                                            <label class="form-check-label form-check-label-cus " for="{{question.id}}-2" onclick="scrollToNext('text{{forloop.counter}}')" >{{question.choice_2}}</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-xxl-12 col-12">
-                                                        <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
-                                                            <input  type="radio" class="form-check-input form-check-input-cus" id="{{question.id}}-3" name="{{question.id}}" value="3" required>
-                                                            <label class="form-check-label form-check-label-cus " for="{{question.id}}-3" onclick="scrollToNext('text{{forloop.counter}}')" >{{question.choice_3}}</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-xxl-12 col-12">
-                                                        <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
-                                                            <input  type="radio" class="form-check-input form-check-input-cus" id="{{question.id}}-4" name="{{question.id}}" value="4" required>
-                                                            <label class="form-check-label form-check-label-cus " for="{{question.id}}-4" onclick="scrollToNext('text{{forloop.counter}}')" >{{question.choice_4}}</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-xxl-12 col-12">
-                                                        <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info " hidden>
-                                                            <input  type="radio" class="form-check-input form-check-input-cus" id="{{question.id}}-5" name="{{question.id}}" value="5" required checked >
-                                                            <label class="form-check-label form-check-label-cus " for="{{question.id}}-5" onclick="scrollToNext('text{{forloop.counter}}')"></label>
-                                                        </div>
-                                                    </div>
-                                                    {% endfor %}
                                             </div>
+                                            <div class="col-xl-4 col-xxl-12 col-12">
+                                                <div
+                                                    class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
+                                                    <input type="radio" class="form-check-input form-check-input-cus"
+                                                        id="{{question.id}}-2" name="{{question.id}}" value="2"
+                                                        required>
+                                                    <label class="form-check-label form-check-label-cus "
+                                                        for="{{question.id}}-2"
+                                                        onclick="scrollToNext('text{{forloop.counter}}')">{{question.choice_2}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-xxl-12 col-12">
+                                                <div
+                                                    class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
+                                                    <input type="radio" class="form-check-input form-check-input-cus"
+                                                        id="{{question.id}}-3" name="{{question.id}}" value="3"
+                                                        required>
+                                                    <label class="form-check-label form-check-label-cus "
+                                                        for="{{question.id}}-3"
+                                                        onclick="scrollToNext('text{{forloop.counter}}')">{{question.choice_3}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-xxl-12 col-12">
+                                                <div
+                                                    class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info ">
+                                                    <input type="radio" class="form-check-input form-check-input-cus"
+                                                        id="{{question.id}}-4" name="{{question.id}}" value="4"
+                                                        required>
+                                                    <label class="form-check-label form-check-label-cus "
+                                                        for="{{question.id}}-4"
+                                                        onclick="scrollToNext('text{{forloop.counter}}')">{{question.choice_4}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-xxl-12 col-12">
+                                                <div class="form-check  form-check-cus custom-checkbox mb-0 checkbox-info "
+                                                    hidden>
+                                                    <input type="radio" class="form-check-input form-check-input-cus"
+                                                        id="{{question.id}}-5" name="{{question.id}}" value="5" required
+                                                        checked>
+                                                    <label class="form-check-label form-check-label-cus "
+                                                        for="{{question.id}}-5"
+                                                        onclick="scrollToNext('text{{forloop.counter}}')"></label>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
-            </div>
         </div>
+    </div>
+<div class="row">
+    <div class="col-sm-4 "></div>
+    <div class="col-sm-4 card card-cus">
+
+        <button type="submit" class="btn btn-success" id="postButton">اتمام آزمون</button>
+    </div>
+    <div class="col-sm-4 " style="background: none;">
+
+    </div>
 </div>
-                </div>
-                <div class="row" >
-                    <div class="col-sm-4 "></div>
-                    <div class="col-sm-4 card card-cus" >
+</div>
+</div>
+</form>
 
-                        <button type="submit" class="btn btn-success" id="postButton">اتمام آزمون</button>
-                    </div>
-                    <div class="col-sm-4 " style="background: none;">
-                        
-                    </div>
-                </div>
-            </form>
 
-                            
 {% endblock content %}
 <!-- test form end -->
 
@@ -137,74 +169,58 @@
     Scripts
     ***********************************-->
 {% block required_js %}
-    <!-- {{ block.super }} -->
-    <!-- Required vendors -->
-    <script>
-        var gallery_defaults = {
-        share: false,
-        facebook: true,
-        facebookDropdownText: 'Facebook111',
-        twitter: true,
-        twitterDropdownText: 'Twitter',
-        googlePlus: true,
-        googlePlusDropdownText: 'GooglePlus',
-        pinterest: true,
-        pinterestDropdownText: 'Pinterest'
-    };
-    </script>
-    <script src="{% static './vendor/global/global.min.js' %}"></script>
-        <!--  -->
+<!-- {{ block.super }} -->
+<!-- Required vendors -->
 
-    <script src="{% static './vendor/lightgallery/js/lightgallery-all.min.js' %}"></script>
-    <script src="{% static './vendor/jquery-steps/build/jquery.steps.min.js' %}"></script>
-    <script src="{% static './vendor/jquery-validation/jquery.validate.min.js' %}"></script>
-    <!-- Form validate init -->
-    <script src="{% static './js/plugins-init/jquery.validate-init.js' %}"></script>
+<script src="{% static './vendor/global/global.min.js' %}"></script>
+<!--  -->
+
+<script src="{% static './vendor/jquery-steps/build/jquery.steps.min.js' %}"></script>
+<script src="{% static './vendor/jquery-validation/jquery.validate.min.js' %}"></script>
+<!-- Form validate init -->
+<script src="{% static './js/plugins-init/jquery.validate-init.js' %}"></script>
+<script src="{% static './vendor/apexchart/apexchart.js' %}"></script>
 
 
-    <!-- Form Steps -->
-    <script src="{% static './vendor/jquery-smartwizard/dist/js/jquery.smartWizard.js' %}"></script>
-    <script src="{% static 'vendor/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
-    
-    <script src="{% static './js/custom.js' %}"></script>
-    <script src="{% static './js/dlabnav-init.js' %}"></script>
-    <script src="{% static './js/demo.js' %}"></script>
-    <script src="{% static './js/styleSwitcher.js' %}"></script>
-    <script>
-        $(document).ready(function(){
-            // SmartWizard initialize
-            $('#smartwizard').smartWizard(); 
-        });
-    </script>
-    <script>
-        const timerElement = document.getElementById('timer');
-        const postButton = document.getElementById('postButton');
-        
-        function convertToPersianNumber(number) {
-          const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-          return number.toString().replace(/\d/g, (digit) => persianNumbers[digit]);
+<!-- Form Steps -->
+<script src="{% static './vendor/jquery-smartwizard/dist/js/jquery.smartWizard.js' %}"></script>
+<script src="{% static 'vendor/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
+
+<script src="{% static './js/custom.js' %}"></script>
+<script src="{% static './js/dlabnav-init.js' %}"></script>
+<script src="{% static './js/demo.js' %}"></script>
+<script src="{% static './js/styleSwitcher.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        // SmartWizard initialize
+        $('#smartwizard').smartWizard();
+    });
+</script>
+<script>
+    const timerElement = document.getElementById('timer');
+    const postButton = document.getElementById('postButton');
+
+    function convertToPersianNumber(number) {
+        const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        return number.toString().replace(/\d/g, (digit) => persianNumbers[digit]);
+    }
+
+    let timeLeft = '{{quiz.time.total_seconds}}'; // set quiz time in timer
+
+    const countdown = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+
+        timerElement.textContent = convertToPersianNumber(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+
+        if (timeLeft === 0) {
+            clearInterval(countdown);
+            postButton.click(); // Simulate button click
+        } else {
+            timeLeft--;
         }
-    
-        let timeLeft = '{{quiz.time.total_seconds}}'; // set quiz time in timer
-        
-        const countdown = setInterval(() => {
-            const minutes = Math.floor(timeLeft / 60);
-            let seconds = timeLeft % 60;
-            
-            timerElement.textContent = convertToPersianNumber(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
-            
-            if (timeLeft === 0) {
-                clearInterval(countdown);
-                postButton.click(); // Simulate button click
-            } else {
-                timeLeft--;
-            }
-        }, 1000); // Update every second
-        </script>
+    }, 1000); // Update every second
+</script>
 
 
 {% endblock required_js %}
-
-
-
-

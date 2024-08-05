@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Question, Lesson, Quiz
+from .models import Question, Lesson, Quiz, QestionReport
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
@@ -20,3 +20,7 @@ class QuizAdmin(admin.ModelAdmin):
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
     list_display = ("name", "master")
+
+@admin.register(QestionReport)
+class LessonAdmin(admin.ModelAdmin):
+    list_display = ("user",)

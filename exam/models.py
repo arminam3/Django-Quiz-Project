@@ -96,3 +96,19 @@ class Quiz(models.Model):
     def j_datetime_edited(self):
         return jalali_convertor(self.datetime_edited)
     
+    
+    def questions_count(self):
+        return self.questions.filter(is_deleted=False).count()
+    
+    
+class QestionReport(models.Model):
+    user = models.ForeignKey(get_user_model(), related_name='question_report', on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, related_name='quiz_question_report', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='question_report', on_delete=models.CASCADE)
+    read = models.BooleanField(default=False)
+    content = models.TextField()
+    datetime_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.get_full_name} | {self.question.text}'
+    

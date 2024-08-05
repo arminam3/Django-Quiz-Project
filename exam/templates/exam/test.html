@@ -1,223 +1,26 @@
-
-{% extends "_base.html" %}
-{% load static %}
-{% load my_tags %}
-
-	{% block title %}
-      <title>term quiz list</title>
-    {% endblock title %}
-
-	{% block head %}
-	  
-	<!-- FAVICONS ICON -->
-	<link rel="shortcut icon" type="image/png" href="images/favicon.png" />
-	<link href="{% static './vendor/jquery-nice-select/css/nice-select.css' %}" rel="stylesheet">
-	<link href="{% static './vendor/swiper/css/swiper-bundle.min.css' %}" rel="stylesheet">
-	<!-- Style css -->
-    <link href="{% static './css/style.css' %}" rel="stylesheet">
-    <link href="{% static './css/custumize.css' %}" rel="stylesheet">
-	
-	{% endblock head %}
-	
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
 </head>
 <body>
-	{% block page_header_name %}
-	آزمون های ترم شما
-	{% endblock page_header_name %}
+	<p id="first_id">amrin</p>
+	<p id="second_id">amrin</p>
 
-    <!--*******************
-        Preloader start
-    ********************-->
-    <div id="preloader">
-		<div class="lds-ripple">
-			<div></div>
-			<div></div>
-		</div>
-    </div>
-    <!--*******************
-        Preloader end
-    ********************-->
-
-    <!--**********************************
-        Main wrapper start
-    ***********************************-->
-    <!-- <div id="main-wrapper"> -->
-    {% block content %}
-  		
-		<!--**********************************
-            Content body start
-        ***********************************-->
-        <div class="content-body farsi	 ">
-            <!-- row -->
-			<div class="container-fluid" dir="rtl">
-				<div class="widget-heading d-flex justify-content-between align-items-center">
-					<h3 class="m-0">مجموعه ی آزمون ها</h3>
-					<!-- <a href="courses.html" class="btn btn-primary btn-sm">View all</a> -->
-				</div>
-				<!-- <div class="card-header border-0 flex-wrap pb-0" dir="ltr" style="margin: 1em;">
-					<h4>Students List</h4>
-					<div class="input-group search-area w-auto">
-						<span class="input-group-text"><a href="javascript:void(0)"><svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M27.414 24.586L22.337 19.509C23.386 17.928 24 16.035 24 14C24 8.486 19.514 4 14 4C8.486 4 4 8.486 4 14C4 19.514 8.486 24 14 24C16.035 24 17.928 23.386 19.509 22.337L24.586 27.414C25.366 28.195 26.634 28.195 27.414 27.414C28.195 26.633 28.195 25.367 27.414 24.586ZM7 14C7 10.14 10.14 7 14 7C17.86 7 21 10.14 21 14C21 17.86 17.86 21 14 21C10.14 21 7 17.86 7 14Z" fill="var(--primary)"></path>
-							</svg>
-							</a></span>
-						<input type="text" id="searchInput" class="form-control" placeholder="Search here...">
-						<div id="searchResults"></div>
-						<input type="text" id="searchInput">
-						<div id="searchResults"></div>
-					</div>
-				</div> -->
-				<div class="row">
-                    {% for quiz in quiz_list %}
-                    <div class="col-xl-4 col-md-3 col-sm-6">
-						<div class="card all-crs-wid">
-							<div class="card-body">
-								<div class="courses-bx">
-
-									<!-- <div class="dlab-media">
-										<img src="{% static 'images/courses/course1.jpg' %}" alt="">
-									</div> -->
-									<div class="dlab-media">
-										{% if quiz.image %}
-											<img src="{{quiz.image.url}}" alt="">
-										{% else %}
-											<img src="{% static 'cus_image/default_quiz_image.jpg' %}" alt="">
-										{% endif %}
-									</div>
-									<div class="dlab-info">
-										<div class="dlab-title d-flex justify-content-between">
-											<div>
-												<h4><a href="course-details-1.html">{{quiz.name}}</a></h4>
-												<!-- <p class="m-0">{{quiz.quiz_maker}} -->
-													<svg class="ms-1" width="4" height="5" viewBox="0 0 4 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-														<circle cx="2" cy="2.5" r="2" fill="#DBDBDB"/>
-													</svg>
-													<span dir="ltr">5.0<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-													<path d="M8 0.5L9.79611 6.02786H15.6085L10.9062 9.44427L12.7023 14.9721L8 11.5557L3.29772 14.9721L5.09383 9.44427L0.391548 6.02786H6.20389L8 0.5Z" fill="#FEC64F"/>
-													</svg>
-													</span>
-												<!-- </p> -->
-											</div>	
-											<span>
-												<h6 class="text-primary">
-													<span style="white-space: nowrap;">
-														{{quiz.time|e2fnum}}
-														<i class="fa-regular fa-clock"></i>
-													</span>
-												</h6>
-											</span>
-										</div>
-										<div class="d-flex justify-content-between content align-items-center">
-											<span style="margin-bottom: 2.5em;">
-												<svg class="me-1" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-													<path d="M21.2 18.6C20.5 18.5 19.8 18.4 19 18.4C16.5 18.4 14.1 19.1 12 20.5C9.90004 19.2 7.50005 18.4 5.00005 18.4C4.30005 18.4 3.50005 18.5 2.80005 18.6C2.30005 18.7 1.90005 19.2 2.00005 19.8C2.10005 20.4 2.60005 20.7 3.20005 20.6C3.80005 20.5 4.40005 20.4 5.00005 20.4C7.30005 20.4 9.50004 21.1 11.4 22.5C11.7 22.8 12.2 22.8 12.6 22.5C15 20.8 18 20.1 20.8 20.6C21.3 20.7 21.9 20.3 22 19.8C22.1 19.2 21.7 18.7 21.2 18.6ZM21.2 2.59999C20.5 2.49999 19.8 2.39999 19 2.39999C16.5 2.39999 14.1 3.09999 12 4.49999C9.90004 3.09999 7.50005 2.39999 5.00005 2.39999C4.30005 2.39999 3.50005 2.49999 2.80005 2.59999C2.40005 2.59999 2.00005 3.09999 2.00005 3.49999V15.5C2.00005 16.1 2.40005 16.5 3.00005 16.5C3.10005 16.5 3.10005 16.5 3.20005 16.5C3.80005 16.4 4.40005 16.3 5.00005 16.3C7.30005 16.3 9.50004 17 11.4 18.4C11.7 18.7 12.2 18.7 12.6 18.4C15 16.7 18 16 20.8 16.5C21.3 16.6 21.9 16.2 22 15.7C22 15.6 22 15.6 22 15.5V3.49999C22 3.09999 21.6 2.59999 21.2 2.59999Z" fill="#c7c7c7"/>
-												</svg>
-												تعداد سوالات : {{quiz.questions.all|length}} &nbsp;
-											</span>
-											
-										</div> <br>
-										<div class="row">
-											<div class="col-md-4">
-												<a href="{% url 'take_an_exam' quiz.id %}" class="btn btn-primary quiz-btn-right-cus">شروع آزمون</a><br>
-											</div>
-
-											<div class="col-md-4">
-												<a href="{% url 'quick_quiz' quiz.id %}" class="btn btn-secondary quiz-btn-cus">سوالات پاسخ در لحظه</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>	
-                    {% endfor %}
-					{% if quiz_list.paginator.num_pages %}
-						<nav>
-							<ul class="pagination pagination-gutter pagination-primary no-bg">
-								{% if quiz_list.has_previous %}
-								<li class="page-item page-indicator">
-									<a class="page-link active" href="{% url 'term_quiz_list' %}?page={{ quiz_list.previous_page_number }}">
-										<i class="la la-angle-right"></i></a>
-									</li>
-									{% endif %}
-									{% if quiz_list.page_range.0 %}
-									<li class="page-item bg-white  {% if quiz_list.current_page == 1 %}active{% endif %}" style="border-radius: 1em"><a class="page-link" href="{% url 'term_quiz_list' %}?page={{quiz_list.page_range.0}}">{{quiz_list.page_range.0|e2fnum}}</a>
-									</li>
-									{% endif %}
-									{% if quiz_list.page_range.1 %}
-										<li class="page-item bg-white  {% if quiz_list.current_page == 2 %}active{% endif %}" style="border-radius: 1em"><a class="page-link" href="{% url 'term_quiz_list' %}?page={{quiz_list.page_range.1}}">{{quiz_list.page_range.1|e2fnum}}</a>
-										</li>
-									{% endif %}
-									{% if quiz_list.page_range|length >= 5 and quiz_list.current_page != 3 %}
-										<li class="page-item bg-white" style="border-radius: 1em"><a class="page-link" href="">..</a>
-										</li>
-									{% endif %}
-									{% if quiz_list.page_range|minus_index_int:1 > quiz_list.current_page and quiz_list.minus_last_2 >= 1 and quiz_list.current_page > 2 %}
-										<li class="page-item bg-white active" style="border-radius: 1em"><a class="page-link" href="{% url 'term_quiz_list' %}?page={{quiz_list.current_page}}">{{quiz_list.current_page|e2fnum}}</a>
-										</li>
-									{% endif %}
-									{% if quiz_list.minus_last_2 > 1 and quiz_list.current_page > 2 %}
-										<li class="page-item bg-white" style="border-radius: 1em"><a class="page-link" href="">..</a>
-										</li>
-									{% endif %}
-										<!-- {% if quiz_list.page_range|minus_index:2  and quiz_list.page_range|length > 3 %}
-											<li class="page-item bg-white  {% if quiz_list.current_page == quiz_list.page_range|minus_index_int:2 %}active{% endif %}" style="border-radius: 1em"><a class="page-link" href="{% url 'term_quiz_list' %}?page={{quiz_list.page_range|minus_index:2}}">{{quiz_list.page_range|minus_index:2|e2fnum}}</a>
-											</li>
-										{% endif %} -->
-									{% if quiz_list.page_range|minus_index:1  and quiz_list.page_range|length > 2 %}
-										<li class="page-item bg-white  {% if quiz_list.current_page == quiz_list.page_range|minus_index_int:1 %}active{% endif %}" style="border-radius: 1em"><a class="page-link" href="{% url 'term_quiz_list' %}?page={{quiz_list.page_range|minus_index:1}}">{{quiz_list.page_range|minus_index:1|e2fnum}}</a>
-										</li>
-									{% endif %}
-								{% if quiz_list.has_next %}
-								<li class="page-item page-indicator">
-									<a class="page-link" href="{% url 'term_quiz_list' %}?page={{ quiz_list.next_page_number }}">
-										<i class="la la-angle-left"></i></a>
-									</li>
-								{% endif %}
-							</ul>
-						</nav>
-					{% endif %}
-					</div>
-			</div>
-        </div>
-        <!--**********************************
-            Content body end
-        ***********************************-->
-    {% endblock content %}
-
-		
-		
+<script>
 	
+  const externalButton = document.getElementById('first_id');
+  const modalButton = document.getElementById('second_id');
 
+  // Add an event listener to the external button
+  externalButton.addEventListener('click', function() {
+    // Change the value of the modal button
+    modalButton.setAttribute('value', 'ali')
+  });
 
-	</div>
-    <!--**********************************
-        Main wrapper end
-    ***********************************-->
-
-    {% block required_js %}
-    <!--**********************************
-        Scripts
-    ***********************************-->
-    <!-- Required vendors -->
-    <script src="{% static './vendor/global/global.min.js' %}"></script>
-	<script src="{% static './vendor/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
-	<script src="{% static './vendor/swiper/js/swiper-bundle.min.js' %}"></script>
-    <script src="{% static './js/dlab.carousel.js' %}"></script>
-    <script src="{% static './js/custom.js' %}"></script>
-	<script src="{% static './js/dlabnav-init.js' %}"></script>
-	<script src="{% static './js/demo.js' %}"></script>
-    <script src="{% static './js/styleSwitcher.js' %}"></script>
-    <script>
-		$(document).ready(function(){
-			$(".pagination-down a").on('click',function(){
-				$(".pagination-down a").removeClass("active");
-				$(this).addClass("active");
-			});
-		});
-		
 	</script>
-    {% endblock required_js %}
-
 </body>
+
 </html>

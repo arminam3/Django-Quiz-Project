@@ -105,14 +105,13 @@ class ProfileUpdateView(CheckHavingProfileMixin, UpdateView):
             user = self.request.user
             user.first_name = posted_data.get('first_name')
             user.last_name = posted_data.get('last_name')
-            user.email = posted_data.get('email')
             user.save()
         except:
             messages.error(
             self.request,
             f"<strong>خطا !</strong> اطلاعات را کامل و به شکل صحیح وارد کنید."
             )
-
+            return redirect('profile')
         return super().post(request, *args, **kwargs)
     
     def form_valid(self, form):

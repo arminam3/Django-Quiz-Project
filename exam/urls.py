@@ -13,7 +13,9 @@ from .views import (
                     QuizUpdateView,
 
                     LessonCreateView,
-                    LessonUpdateView
+                    LessonUpdateView,
+                    question_report_create_view,
+                    # question_report_read
                     )
 
 urlpatterns = [
@@ -27,15 +29,14 @@ urlpatterns = [
     path('quiz-delete/', quiz_delete_view, name="quiz_delete"),
     path('quiz-return/<str:pk>', quiz_return_view, name="quiz_return"),
     path('quiz-update/<str:pk>/', QuizUpdateView.as_view(), name="quiz_update"),
-    # path('quiz-detail/<str:pk>/', QuizDetailView.as_view(), name="quiz_detail"),
+    
     path('quiz-question-create/<str:pk>/', QuizQuestionCreateView.as_view(), name="quiz_question_create"),
     path('quiz-question-update/<str:pk>/', QuizQuestionUpdateView.as_view(), name="quiz_question_update"),
     path('quiz-add-question/<str:pk>/', QuizAddQuestionView.as_view(), name="quiz_add_question"),
 
-    # path('question-create/', QuestionCreateView.as_view(), name="question_create"),
     path('question-update/<str:pk>/', QuestionUpdateView.as_view(), name="question_update"),
-    # path('question-detail/<str:pk>/', QuestionDetailView.as_view(), name="question_detail"),
-    # path('question-list/', QuestionListView.as_view(), name="question_list"),
 
     path('question-delete/<str:pk>/', question_delete_view, name="question_delete"),
+    path('question-report/', question_report_create_view, name="question_report"),
+    # path('question-report-read/<str:pk>/', question_report_read, name="question_report_read"),
 ]

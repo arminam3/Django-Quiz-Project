@@ -67,10 +67,9 @@
 					<form class="farsi" method="POST" data-netlify="true"
 						 enctype="multipart/form-data" action="{% url 'quiz_question_update' quiz.pk %}">
 						<div class="row">
-						{% for question in quiz.questions.all %}		
+						{% for question in question_list %}		
 							{% csrf_token %}
 							{% if not question.is_deleted %}
-							  
 							<div class="col-xl-6 col-lg-6" >
 									<div class="card" dir="">
 										<div class="card-header  " >

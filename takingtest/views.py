@@ -63,7 +63,10 @@ class QuizHistoryCreateView(CheckHavingProfileMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        quiz = get_object_or_404(Quiz, pk=self.kwargs.get('pk'))
         context['quiz'] = get_object_or_404(Quiz, pk=self.kwargs.get('pk'))
+        question_list = quiz.questions.filter(is_deleted=False)
+        context['question_list'] = question_list
         return context
 
 # @method_decorator(cache_page(60*s15), name='dispatch')
@@ -203,12 +206,7 @@ class LikeDislikeView(CheckHavingProfileMixin, TemplateView):
 
         )
         return JsonResponse({'success': 'ok'}, status=200)
-        
-# def search_view(request):
-#     query = request.GET.get('query', '')
-#     results = Quiz.objects.filter(name__icontains=query)
-#     data = [{'title': result.name, 'description': result.quiz_maker} for result in results]
-#     return JsonResponse(data, safe=False)
+
 
 
 

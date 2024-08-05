@@ -10,8 +10,6 @@
 	
 
 	{% block head %}
-	<link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
-
 	<!-- FAVICONS ICON -->
 	<link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
     <!-- Form step -->
@@ -38,8 +36,9 @@
         ***********************************-->
         <div class="content-body farsi">
             <div class="container-fluid " dir="rtl">
-                <div class="row page-titles">
-                    <ol class="breadcrumb" dir="rtl" style="text-align: right;">
+				{% include "message.html" %}
+				<div class="row page-titles">
+				<ol class="breadcrumb" dir="rtl" style="text-align: right;">
                         <li class="breadcrumb-item active"><a href="">نتایج آزمون ها </a></li>
                         <li class=""><a href="">
                             <span class="text-primary">&nbsp; / </span>
@@ -57,11 +56,9 @@
 					radi button start
 				***************************** -->
 				<!-- <form class="farsi"> -->
-					<form class="farsi" method="POST" data-netlify="true"
-						 enctype="multipart/form-data" action="">
-						<div class="row">
+					<div class="row">
+						<p name="problem_qustion_id" id="problem_qustion_id"  hidden>dddd</p>
 						{% for quiz_history in quiz_histories %}		
-							{% csrf_token %}
 							<div class="col-xl-6 col-lg-6">
 									<div class="card" dir="">
 										<div class="card-header 
@@ -73,7 +70,7 @@
                                             bg-success-cus
                                         {% endif %}
                                         " >
-											<h4 class="card-title
+											<span class="card-title
                                              {% if quiz_history.question.answer != quiz_history.user_answer %}
                                                 text-white
                                              {% endif %} 
@@ -88,17 +85,21 @@
                                                     {{forloop.counter|e2fnum}}
                                                     </span> 
                                                 {% endif %}
-												{{quiz_history.question.text}}</h4>
-												<!-- modal -->
-                                                <!-- <span 
-                                                type="" class="badge  badge-primary "
-                                                data-bs-toggle="popover" data-bs-placement="left" data-bs-content=""
-                                                title="Popover in Left"
-                                                >{{forloop.counter|e2fnum}}</span> -->
-
+												
+												{{quiz_history.question.text}}</span>
+												<div class="dropdown ms-auto text-center">
+													<div class="btn-link" data-bs-toggle="dropdown" style="transform: rotate(90deg);margin: -1em;">
+														<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+													</div>
+													<div class="dropdown-menu dropdown-menu-start">
+														<a onclick="changeReportProblemButtonValue('{{quiz_history.question.id}}')"
+															class="dropdown-item text-end" id="problemBottun"
+															data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+															گزارش مشکل سوال
+														</a>
+													</div>
+												</div>
 											<div class="basic-form col-3">
-												
-												
 											</div>
 										</div>
 										<div class="card-body">
@@ -189,35 +190,38 @@
 									</div>
 							</div>
 						{% endfor %}
-
 						<div>
 						<div class="col-xl-2 col-lg-4">
 							<div class="card" dir="rtl">
-								<!-- <button type="button" name="delete_question" class="btn btn-primary farsi" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">حذف سوال</button> -->
-									<!-- Modal -->
-									<div class="modal fade farsi" id="exampleModalCenter">
+							<!-- Modal start -->
+							<form action="{% url 'question_report' %}" method="POST">
+								{% csrf_token %}
+								<div class="modal fade farsi" id="exampleModalCenter">
 										<div class="modal-dialog modal-dialog-centered" role="document">
 											<div class="modal-content" >
 												<div class="modal-header" dir="rtl">
-													<h5 class="modal-title"> اخطار</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" dir="rtl" style="margin-right: -4.5em;">
+													<h5 class="modal-title"> در صورت تمایل مشکل سوال را ذکر کنید .</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" dir="ltr" style="position: absolute;left: 1em;">
 													</button>
 												</div>
 												<div class="modal-body">
-													<p>آیا از حذف  سوال اطمینان دارید ؟ </p>
+													<div class="form-group">
+														<label for="message-text" class="col-form-label">شرح مشکل سوال :</label>
+														<textarea class="form-control" id="message-text" name="report_content"></textarea>
+													</div>
 												</div>
-												<div class="modal-footer farsi">
-													<button type="button" class="btn btn-dark light" data-bs-dismiss="modal">لغو</button>
-													<button type="submit" class="btn btn-primary" name="delete_question" value="" id="delete"> حذف </button>
-												</div>
+											<input type="hidden" name="quiz_id" value="{{ quiz_his.quiz.id }}">
+											<div class="modal-footer farsi">
+												<button type="button" class="btn btn-dark light" data-bs-dismiss="modal">لغو</button>
+												<button type="submit" class="btn btn-primary" name="reported_question_id" id="reportProblemButton"> ارسال </button>
 											</div>
 										</div>
+									</div>
 								</div>																						
-								
+							</form>
+									<!-- modal end -->
 							</div>																																																																																				
 						</div></div>
-						
-						
 					</div>
 					<div class="row">
 						<div class="col-xl-4 col-lg-4"></div>
@@ -229,25 +233,13 @@
 						<div class="col-xl-4 col-lg-4"></div>
 					</div>
 				</div>
-			</form>
-			<!-- *****************************
-				radi button end
-				***************************** -->
 			</div>
 		</div>
-		
         <!--**********************************
             Content body end
 			***********************************-->
-			
-			
     {% endblock content %}
 
-
-
-
-        
-    </div>
     <!--**********************************
         Main wrapper end
     ***********************************-->
@@ -261,6 +253,10 @@
 	<!-- {{ block.super }} -->
         <!-- Required vendors -->
 	<script src="{% static './vendor/global/global.min.js' %}"></script>
+    <script src="{% static './vendor/chart.js/Chart.bundle.min.js' %}"></script>
+	<script src="{% static './vendor/apexchart/apexchart.js' %}"></script>
+
+
 		<!--  -->
 	<script src="{% static './vendor/jquery-steps/build/jquery.steps.min.js' %}"></script>
     <script src="{% static './vendor/jquery-validation/jquery.validate.min.js' %}"></script>
@@ -283,13 +279,36 @@
 		});
 	</script>
 	<script>
-		function deleteQuiz(quiz_id){
-		var button = document.getElementById('delete');
+		const externalButton = document.getElementById('problemBottun');
+		const modalButton = document.getElementById('reportProblemButton');
 
-		button.value = quiz_id;}
+		// Add an event listener to the external button
+		const changeReportProblemButtonValue = function(question_id) {
+			// Change the value of the modal button
+			modalButton.setAttribute('value', question_id);
+		}
+
 	</script>
+    <script>
+        function reportQuestionProblem(question_id){
+            fetch(`{% url 'change_user_level' %}?user_id=${user_id}&action=${action}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    window.location.href ='{% url "user_list" %}'
+                } 
+                if (data.success) {
+                    window.location.href ='{% url "user_list" %}'
+                } 
+            })
+            .catch(error => {
+                // Handle errors here
+            });
+    }
+    </script>
     {% endblock required_js %}
-
 
 
 </html>
