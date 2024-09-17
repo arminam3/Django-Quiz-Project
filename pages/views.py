@@ -37,8 +37,6 @@ class HomeView(TemplateView):
         today = datetime.now().date()
         start_of_day = datetime.combine(today, datetime.min.time()) - timedelta(days=6)
         end_of_day = datetime.combine(today, datetime.max.time()) + timedelta(days=0)
-        print(start_of_day)
-        print(end_of_day)
         # questions_answered = QuizHistory.objects.filter(user=user, datetime_created__range=(start_of_day, end_of_day)).annotate(daily_question_count=Count('question'))
         activity_list = [0, 0, 0, 0, 0, 0, 0]
         def manipulate_list(lst, num):
@@ -106,10 +104,7 @@ class HomeView(TemplateView):
                         activity_list[6] = activity['count']
                     except:
                         pass
-                print('day_moderate' + f'{day_name_moderator}')
-                # day_name_moderator += 1
-                print(activity['day'].strftime('%A') , end='-')
-                print(activity['count'])
+
         context['week_activity'] = manipulate_list(activity_list, day_name_moderator)
             
         # get name of 7 past days
@@ -138,14 +133,11 @@ class HomeView(TemplateView):
 
 def theme_change_view(request):
     if request.method == "POST":
-        print(request.session.get('theme'))
         session_theme = request.session.get('theme')
         if session_theme == 'light':
             request.session['theme'] = 'dark'
         else:
             request.session['theme'] = 'light'
-
-
     return HttpResponseRedirect(request.POST.get('next_url'))
 
 

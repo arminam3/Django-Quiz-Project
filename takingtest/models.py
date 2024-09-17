@@ -32,12 +32,12 @@ class QuizResult(models.Model):
 
     def __str__(self):
         return f'{self.quiz.name} | {self.user}'
-    
 
     def quiz_result_score_percent(self):
         user_result_percent = 0
+        quiz_question_count = QuizHistory.objects.filter(exam_number=self.exam_number).count()
         try:
-            user_result_percent = int(self.score / self.quiz.questions.count() * 100 ) 
+            user_result_percent = int(self.score / quiz_question_count * 100 ) 
         except:
             pass
         

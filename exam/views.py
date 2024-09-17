@@ -318,6 +318,7 @@ def quiz_return_view(request, pk):
     )
     return JsonResponse({'message': 'not allowed!.'}, status=500)
 
+
 class QuizUpdateView(IsStaffOrQuizMakerUserMixin, UpdateView):
     model = Quiz
     fields = ('name', 'lesson', 'time')

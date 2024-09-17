@@ -55,14 +55,10 @@
                                                     text-primary
                                                 {% endif %}
                                                 ">{{forloop.counter|e2fnum}} ) {{notification.title}}
-                                                    <!-- <strong class="text-primary">$500</strong>. -->
                                                 </h6>
                                                 {% if notification.text %}
-												<p class="mb-0">{{notification.text}}</p>
+												<p class="mb-0">{{notification.text|safe}}</p>
                                                 {% endif %}
-                                                <!-- {% if not notificaiton.is_read %}
-                                                    <button type="button" id="seen-{{forloop.counter}}" onclick="seen_notification_list('seen-{{forloop.counter}}', '{{notification.id}}')"  class="btn btn-outline-primary" style="border: none;" style="position: absolute;left: 2em;">دیدم</button>
-                                                {% endif %} -->
                                             </span>
                                         </li>
                                         {% endfor %}
